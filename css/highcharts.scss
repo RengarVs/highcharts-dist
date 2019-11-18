@@ -86,7 +86,7 @@ $indicator-negative-line: #F21313;
     height: 100%;
     text-align: left;
     line-height: normal;
-    z-index: 0; /* #1072 */
+    z-index: -1; /* #1072 */
     -webkit-tap-highlight-color: rgba(0,0,0,0);
     font-family: $font-family;
     font-size: 12px;
