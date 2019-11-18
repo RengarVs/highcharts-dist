@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -99,7 +99,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -202,7 +202,7 @@
                 if (xVal.length < period ||
                     !isArray(yVal[0]) ||
                     yVal[0].length !== 4) {
-                    return false;
+                    return;
                 }
                 for (i = period; i <= yValLen; i++) {
                     slicedX = xVal.slice(i - period, i);

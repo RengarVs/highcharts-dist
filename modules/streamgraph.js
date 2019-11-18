@@ -1,5 +1,5 @@
 /*
- Highcharts JS v7.2.1 (2019-10-31)
+ Highcharts JS v7.2.1-modified (2019-11-18)
 
  Streamgraph module
 

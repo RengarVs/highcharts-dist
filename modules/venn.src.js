@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v7.2.1-modified (2019-11-18)
  *
  * (c) 2017-2019 Highsoft AS
  * Authors: Jon Arild Nygard
@@ -61,7 +61,7 @@
                 graphic
                     .css(css)
                     .attr(params.attribs)
-                    .animate(animatableAttribs, params.isNew ? false : undefined, onComplete);
+                    .animate(animatableAttribs, params.isNew ? false : void 0, onComplete);
             }
             else if (graphic) {
                 var destroy = function () {
@@ -72,7 +72,7 @@
                 };
                 // animate only runs complete callback if something was animated.
                 if (Object.keys(animatableAttribs).length) {
-                    graphic.animate(animatableAttribs, undefined, function () {
+                    graphic.animate(animatableAttribs, void 0, function () {
                         destroy();
                     });
                 }
@@ -617,7 +617,7 @@
          * */
         // TODO: replace with individual imports
         var nelderMead = NelderMeadModule.nelderMead;
-        var isArray = U.isArray, isNumber = U.isNumber, isObject = U.isObject, isString = U.isString;
+        var animObject = U.animObject, isArray = U.isArray, isNumber = U.isNumber, isObject = U.isObject, isString = U.isString;
         var addEvent = H.addEvent, color = H.Color, extend = H.extend, getAreaOfCircle = geometryCircles.getAreaOfCircle, getAreaOfIntersectionBetweenCircles = geometryCircles.getAreaOfIntersectionBetweenCircles, getCirclesIntersectionPolygon = geometryCircles.getCirclesIntersectionPolygon, getCircleCircleIntersection = geometryCircles.getCircleCircleIntersection, getCenterOfPoints = geometry.getCenterOfPoints, getDistanceBetweenPoints = geometry.getDistanceBetweenPoints, getOverlapBetweenCirclesByDistance = geometryCircles.getOverlapBetweenCircles, isPointInsideAllCircles = geometryCircles.isPointInsideAllCircles, isPointInsideCircle = geometryCircles.isPointInsideCircle, isPointOutsideAllCircles = geometryCircles.isPointOutsideAllCircles, merge = H.merge, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
         var objectValues = function objectValues(obj) {
             return Object.keys(obj).map(function (x) {
@@ -830,7 +830,7 @@
                     return best;
                 }, best);
             }, {
-                point: undefined,
+                point: void 0,
                 margin: -Number.MAX_VALUE
             }).point;
             // Use nelder mead to optimize the initial label position.
@@ -1089,7 +1089,7 @@
                     return best;
                 }, {
                     loss: Number.MAX_VALUE,
-                    coordinates: undefined
+                    coordinates: void 0
                 });
                 // Add the set to its final position.
                 positionSet(set, bestPosition.coordinates);
@@ -1276,12 +1276,8 @@
             clip: false,
             colorByPoint: true,
             dataLabels: {
-                /** @ignore-option */
                 enabled: true,
-                /** @ignore-option */
                 verticalAlign: 'middle',
-                // eslint-disable-next-line valid-jsdoc
-                /** @ignore-option */
                 formatter: function () {
                     return this.point.name;
                 }
@@ -1458,7 +1454,7 @@
             /* eslint-enable valid-jsdoc */
             animate: function (init) {
                 if (!init) {
-                    var series = this, animOptions = H.animObject(series.options.animation);
+                    var series = this, animOptions = animObject(series.options.animation);
                     series.points.forEach(function (point) {
                         var args = point.shapeArgs;
                         if (point.graphic && args) {

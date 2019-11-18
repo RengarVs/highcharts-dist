@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v7.2.1-modified (2019-11-18)
  *
  * Module for adding patterns and images as point fills.
  *
@@ -137,7 +137,7 @@
         * @name Highcharts.PatternObject#animation
         * @type {boolean|Highcharts.AnimationOptionsObject|undefined}
         */
-        var erase = U.erase, pick = U.pick;
+        var animObject = U.animObject, erase = U.erase, pick = U.pick;
         var addEvent = H.addEvent, wrap = H.wrap, merge = H.merge;
         /**
          * Utility function to compute a hash value from an object. Modified Java
@@ -268,7 +268,7 @@
          * @requires modules/pattern-fill
          */
         H.SVGRenderer.prototype.addPattern = function (options, animation) {
-            var pattern, animate = pick(animation, true), animationOptions = H.animObject(animate), path, defaultSize = 32, width = options.width || options._width || defaultSize, height = (options.height || options._height || defaultSize), color = options.color || '#343434', id = options.id, ren = this, rect = function (fill) {
+            var pattern, animate = pick(animation, true), animationOptions = animObject(animate), path, defaultSize = 32, width = options.width || options._width || defaultSize, height = (options.height || options._height || defaultSize), color = options.color || '#343434', id = options.id, ren = this, rect = function (fill) {
                 ren.rect(0, 0, width, height)
                     .attr({ fill: fill })
                     .add(pattern);
@@ -336,7 +336,7 @@
                 }
             }
             // For non-animated patterns, set opacity now
-            if (!(options.image && animate) && options.opacity !== undefined) {
+            if (!(options.image && animate) && typeof options.opacity !== 'undefined') {
                 [].forEach.call(pattern.element.childNodes, function (child) {
                     child.setAttribute('opacity', options.opacity);
                 });

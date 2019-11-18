@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v7.2.1-modified (2019-11-18)
  *
  * Solid angular gauge module
  *
@@ -49,7 +49,7 @@
         * @name Highcharts.SymbolOptionsObject#rounded
         * @type {boolean|undefined}
         */
-        var extend = U.extend, isNumber = U.isNumber, pick = U.pick, pInt = U.pInt;
+        var clamp = U.clamp, extend = U.extend, isNumber = U.isNumber, pick = U.pick, pInt = U.pInt;
         var wrap = H.wrap, Renderer = H.Renderer, colorAxisMethods;
         /**
          * Symbol definition of an arc with round edges.
@@ -129,8 +129,8 @@
                         dataClass = dataClasses[i];
                         from = dataClass.from;
                         to = dataClass.to;
-                        if ((from === undefined || value >= from) &&
-                            (to === undefined || value <= to)) {
+                        if ((typeof from === 'undefined' || value >= from) &&
+                            (typeof to === 'undefined' || value <= to)) {
                             color = dataClass.color;
                             if (point) {
                                 point.dataClass = i;
@@ -253,7 +253,6 @@
              */
             colorByPoint: true,
             dataLabels: {
-                /** @ignore-option */
                 y: 0
             }
         };
@@ -295,10 +294,10 @@
                             point.color = toColor;
                         }
                         // Handle overshoot and clipping to axis max/min
-                        rotation = Math.max(axisMinAngle - overshootVal, Math.min(axisMaxAngle + overshootVal, rotation));
+                        rotation = clamp(rotation, axisMinAngle - overshootVal, axisMaxAngle + overshootVal);
                         // Handle the wrap option
                         if (options.wrap === false) {
-                            rotation = Math.max(axisMinAngle, Math.min(axisMaxAngle, rotation));
+                            rotation = clamp(rotation, axisMinAngle, axisMaxAngle);
                         }
                         minAngle = Math.min(rotation, series.thresholdAngleRad);
                         maxAngle = Math.max(rotation, series.thresholdAngleRad);

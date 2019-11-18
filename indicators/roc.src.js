@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -115,7 +115,7 @@
                 // Period is used as a number of time periods ago, so we need more
                 // (at least 1 more) data than the period value
                 if (xVal.length <= period) {
-                    return false;
+                    return;
                 }
                 // Switch index for OHLC / Candlestick / Arearange
                 if (isArray(yVal[0])) {

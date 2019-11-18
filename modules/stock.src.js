@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Highstock as a plugin for Highcharts
  *
@@ -38,8 +38,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var defined = U.defined, destroyObjectProperties = U.destroyObjectProperties, pick = U.pick;
-        var addEvent = H.addEvent, Axis = H.Axis, correctFloat = H.correctFloat, defaultOptions = H.defaultOptions, fireEvent = H.fireEvent, hasTouch = H.hasTouch, isTouchDevice = H.isTouchDevice, merge = H.merge, removeEvent = H.removeEvent, swapXY;
+        var correctFloat = U.correctFloat, defined = U.defined, destroyObjectProperties = U.destroyObjectProperties, pick = U.pick;
+        var addEvent = H.addEvent, Axis = H.Axis, defaultOptions = H.defaultOptions, fireEvent = H.fireEvent, hasTouch = H.hasTouch, isTouchDevice = H.isTouchDevice, merge = H.merge, removeEvent = H.removeEvent, swapXY;
         /**
          *
          * The scrollbar is a means of panning over the X axis of a stock chart.
@@ -108,7 +108,7 @@
              * @type  {boolean}
              * @since 1.3
              */
-            liveRedraw: undefined,
+            liveRedraw: void 0,
             /**
              * The margin between the scrollbar and its axis when the scrollbar is
              * applied directly to an axis.
@@ -918,7 +918,7 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var defined = U.defined, destroyObjectProperties = U.destroyObjectProperties, erase = U.erase, extend = U.extend, isArray = U.isArray, isNumber = U.isNumber, pick = U.pick, splat = U.splat;
+        var clamp = U.clamp, correctFloat = U.correctFloat, defined = U.defined, destroyObjectProperties = U.destroyObjectProperties, erase = U.erase, extend = U.extend, isArray = U.isArray, isNumber = U.isNumber, pick = U.pick, splat = U.splat;
         var addEvent = H.addEvent, Axis = H.Axis, Chart = H.Chart, color = H.color, defaultOptions = H.defaultOptions, hasTouch = H.hasTouch, isTouchDevice = H.isTouchDevice, merge = H.merge, removeEvent = H.removeEvent, Scrollbar = H.Scrollbar, Series = H.Series, seriesTypes = H.seriesTypes, defaultSeriesType, 
         // Finding the min or max of a set of variables where we don't know if they
         // are defined, is a pattern that is repeated several places in Highcharts.
@@ -933,7 +933,7 @@
                 return Math[extreme].apply(0, numbers);
             }
         };
-        defaultSeriesType = seriesTypes.areaspline === undefined ?
+        defaultSeriesType = typeof seriesTypes.areaspline === 'undefined' ?
             'line' :
             'areaspline';
         extend(defaultOptions, {
@@ -1242,9 +1242,7 @@
                      * @extends plotOptions.series.dataLabels
                      */
                     dataLabels: {
-                        /** @internal */
                         enabled: false,
-                        /** @internal */
                         zIndex: 2 // #1839
                     },
                     id: 'highcharts-navigator-series',
@@ -1432,10 +1430,10 @@
             var fixedRange = this.chart && this.chart.fixedRange, halfPointRange = (this.pointRange || 0) / 2, newMin = pick(fixedMin, this.translate(pxMin, true, !this.horiz)), newMax = pick(fixedMax, this.translate(pxMax, true, !this.horiz)), changeRatio = fixedRange && (newMax - newMin) / fixedRange;
             // Add/remove half point range to/from the extremes (#1172)
             if (!defined(fixedMin)) {
-                newMin = H.correctFloat(newMin + halfPointRange);
+                newMin = correctFloat(newMin + halfPointRange);
             }
             if (!defined(fixedMax)) {
-                newMax = H.correctFloat(newMax - halfPointRange);
+                newMax = correctFloat(newMax - halfPointRange);
             }
             // If the difference between the fixed range and the actual requested range
             // is too great, the user is dragging across an ordinal gap, and we need to
@@ -1449,7 +1447,7 @@
                 }
             }
             if (!isNumber(newMin) || !isNumber(newMax)) { // #1195, #7411
-                newMin = newMax = undefined;
+                newMin = newMax = void 0;
             }
             return {
                 min: newMin,
@@ -1763,8 +1761,8 @@
                 if (this.hasDragged && !defined(pxMin)) {
                     return;
                 }
-                min = H.correctFloat(min - pointRange / 2);
-                max = H.correctFloat(max + pointRange / 2);
+                min = correctFloat(min - pointRange / 2);
+                max = correctFloat(max + pointRange / 2);
                 // Don't render the navigator until we have data (#486, #4202, #5172).
                 if (!isNumber(min) || !isNumber(max)) {
                     // However, if navigator was already rendered, we may need to resize
@@ -1800,8 +1798,8 @@
                 // Are we below the minRange? (#2618, #6191)
                 newMin = xAxis.toValue(pxMin, true);
                 newMax = xAxis.toValue(pxMax, true);
-                currentRange = Math.abs(H.correctFloat(newMax - newMin));
-                if (H.correctFloat(currentRange - pointRange) < minRange) {
+                currentRange = Math.abs(correctFloat(newMax - newMin));
+                if (currentRange < minRange) {
                     if (this.grabbedLeft) {
                         pxMin = xAxis.toPixels(newMax - minRange - pointRange, true);
                     }
@@ -1810,7 +1808,7 @@
                     }
                 }
                 else if (defined(maxRange) &&
-                    H.correctFloat(currentRange - pointRange) > maxRange) {
+                    correctFloat(currentRange - pointRange) > maxRange) {
                     if (this.grabbedLeft) {
                         pxMin = xAxis.toPixels(newMax - maxRange - pointRange, true);
                     }
@@ -1819,10 +1817,10 @@
                     }
                 }
                 // Handles are allowed to cross, but never exceed the plot area
-                navigator.zoomedMax = Math.min(Math.max(pxMin, pxMax, 0), zoomedMax);
-                navigator.zoomedMin = Math.min(Math.max(navigator.fixedWidth ?
+                navigator.zoomedMax = clamp(Math.max(pxMin, pxMax), 0, zoomedMax);
+                navigator.zoomedMin = clamp(navigator.fixedWidth ?
                     navigator.zoomedMax - navigator.fixedWidth :
-                    Math.min(pxMin, pxMax), 0), zoomedMax);
+                    Math.min(pxMin, pxMax), 0, zoomedMax);
                 navigator.range = navigator.zoomedMax - navigator.zoomedMin;
                 zoomedMax = Math.round(navigator.zoomedMax);
                 zoomedMin = Math.round(navigator.zoomedMin);
@@ -2144,7 +2142,7 @@
                     this.eventsToUnbind.forEach(function (unbind) {
                         unbind();
                     });
-                    this.eventsToUnbind = undefined;
+                    this.eventsToUnbind = void 0;
                 }
                 this.removeBaseSeriesEvents();
             },
@@ -2753,7 +2751,7 @@
                         }
                     }
                 }
-                if (e.zoomed !== undefined) {
+                if (typeof e.zoomed !== 'undefined') {
                     e.preventDefault();
                 }
             });
@@ -2916,7 +2914,7 @@
             if ((!this.options.ordinal && !this.options.breaks) ||
                 !positions ||
                 positions.length < 3 ||
-                min === undefined) {
+                typeof min === 'undefined') {
                 return time.getTimeTicks.apply(time, arguments);
             }
             // Analyze the positions array to split it into segments on gaps larger than
@@ -3001,7 +2999,7 @@
                 }
                 // Now loop over again and remove ticks where needed
                 i = groupPositions[length - 1] > max ? length - 1 : length; // #817
-                lastTranslated = undefined;
+                lastTranslated = void 0;
                 while (i--) {
                     translated = translatedArr[i];
                     distance = Math.abs(lastTranslated - translated);
@@ -3152,7 +3150,7 @@
                     else {
                         axis.overscrollPointsRange = pick(axis.closestPointRange, axis.overscrollPointsRange);
                         axis.ordinalPositions = axis.ordinalSlope = axis.ordinalOffset =
-                            undefined;
+                            void 0;
                     }
                 }
                 axis.isOrdinal = isOrdinal && useOrdinal; // #3818, #4196, #4926
@@ -3270,7 +3268,8 @@
                     // If the index is within the range of the ordinal positions, return
                     // the associated or interpolated value. If not, just return the
                     // value
-                    return (distance !== undefined && ordinalPositions[i] !== undefined ?
+                    return (typeof distance !== 'undefined' &&
+                        typeof ordinalPositions[i] !== 'undefined' ?
                         ordinalPositions[i] + (distance ?
                             distance *
                                 (ordinalPositions[i + 1] - ordinalPositions[i]) :
@@ -4034,8 +4033,8 @@
         * @name Highcharts.DataGroupingInfoObject#start
         * @type {number}
         */
-        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, defined = U.defined, extend = U.extend, isNumber = U.isNumber, pick = U.pick;
-        var addEvent = H.addEvent, Axis = H.Axis, correctFloat = H.correctFloat, defaultPlotOptions = H.defaultPlotOptions, format = H.format, merge = H.merge, Point = H.Point, Series = H.Series, Tooltip = H.Tooltip;
+        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, correctFloat = U.correctFloat, defined = U.defined, extend = U.extend, isNumber = U.isNumber, pick = U.pick;
+        var addEvent = H.addEvent, Axis = H.Axis, defaultPlotOptions = H.defaultPlotOptions, format = H.format, merge = H.merge, Point = H.Point, Series = H.Series, Tooltip = H.Tooltip;
         /* ************************************************************************** *
          *  Start data grouping module                                                *
          * ************************************************************************** */
@@ -4089,25 +4088,25 @@
                 });
                 // Return undefined when first elem. is undefined and let
                 // sum method handle null (#7377)
-                return ret[0] === undefined ? undefined : ret;
+                return typeof ret[0] === 'undefined' ? void 0 : ret;
             },
             open: function (arr) {
-                return arr.length ? arr[0] : (arr.hasNulls ? null : undefined);
+                return arr.length ? arr[0] : (arr.hasNulls ? null : void 0);
             },
             high: function (arr) {
                 return arr.length ?
                     arrayMax(arr) :
-                    (arr.hasNulls ? null : undefined);
+                    (arr.hasNulls ? null : void 0);
             },
             low: function (arr) {
                 return arr.length ?
                     arrayMin(arr) :
-                    (arr.hasNulls ? null : undefined);
+                    (arr.hasNulls ? null : void 0);
             },
             close: function (arr) {
                 return arr.length ?
                     arr[arr.length - 1] :
-                    (arr.hasNulls ? null : undefined);
+                    (arr.hasNulls ? null : void 0);
             },
             // ohlc and range are special cases where a multidimensional array is
             // input and an array is output
@@ -4174,7 +4173,7 @@
             for (i; i <= dataLength; i++) {
                 // when a new group is entered, summarize and initialize
                 // the previous group
-                while ((groupPositions[pos + 1] !== undefined &&
+                while ((typeof groupPositions[pos + 1] !== 'undefined' &&
                     xData[i] >= groupPositions[pos + 1]) ||
                     i === dataLength) { // get the last group
                     // get group x and y
@@ -4200,7 +4199,7 @@
                         });
                     }
                     // push the grouped data
-                    if (groupedY !== undefined) {
+                    if (typeof groupedY !== 'undefined') {
                         groupedXData.push(pointX);
                         groupedYData.push(groupedY);
                         groupMap.push(series.dataGroupInfo);
@@ -4535,7 +4534,7 @@
         // Extend the original method, make the tooltip's header reflect the grouped
         // range.
         addEvent(Tooltip, 'headerFormatter', function (e) {
-            var tooltip = this, time = this.chart.time, labelConfig = e.labelConfig, series = labelConfig.series, options = series.options, tooltipOptions = series.tooltipOptions, dataGroupingOptions = options.dataGrouping, xDateFormat = tooltipOptions.xDateFormat, xDateFormatEnd, xAxis = series.xAxis, currentDataGrouping, dateTimeLabelFormats, labelFormats, formattedKey, formatString = tooltipOptions[(e.isFooter ? 'footer' : 'header') + 'Format'];
+            var tooltip = this, chart = this.chart, time = chart.time, labelConfig = e.labelConfig, series = labelConfig.series, options = series.options, tooltipOptions = series.tooltipOptions, dataGroupingOptions = options.dataGrouping, xDateFormat = tooltipOptions.xDateFormat, xDateFormatEnd, xAxis = series.xAxis, currentDataGrouping, dateTimeLabelFormats, labelFormats, formattedKey, formatString = tooltipOptions[(e.isFooter ? 'footer' : 'header') + 'Format'];
             // apply only to grouped series
             if (xAxis &&
                 xAxis.options.type === 'datetime' &&
@@ -4578,7 +4577,7 @@
                 e.text = format(formatString, {
                     point: extend(labelConfig.point, { key: formattedKey }),
                     series: series
-                }, time);
+                }, chart);
                 e.preventDefault();
             }
         });
@@ -4648,7 +4647,7 @@
          *
          * @function Highcharts.Axis#setDataGrouping
          *
-         * @param {boolean|Highcharts.PlotSeriesDataGroupingOptions} [dataGrouping]
+         * @param {boolean|Highcharts.DataGroupingOptionsObject} [dataGrouping]
          *        A `dataGrouping` configuration. Use `false` to disable data grouping
          *        dynamically.
          *
@@ -4705,6 +4704,7 @@
          * the first point instance are copied over to the group point. This can be
          * altered through a custom `approximation` callback function.
          *
+         * @declare   Highcharts.DataGroupingOptionsObject
          * @product   highstock
          * @requires  modules/datagrouping
          * @apioption plotOptions.series.dataGrouping
@@ -5100,7 +5100,7 @@
                 var series = this, points = series.points, chart = series.chart;
                 points.forEach(function (point) {
                     var plotOpen, plotClose, crispCorr, halfWidth, path, graphic = point.graphic, crispX, isNew = !graphic;
-                    if (point.plotY !== undefined) {
+                    if (typeof point.plotY !== 'undefined') {
                         // Create and/or update the graphic
                         if (!graphic) {
                             point.graphic = graphic = chart.renderer.path()
@@ -5398,7 +5398,7 @@
                 var series = this, points = series.points, chart = series.chart, reversedYAxis = series.yAxis.reversed;
                 points.forEach(function (point) {
                     var graphic = point.graphic, plotOpen, plotClose, topBox, bottomBox, hasTopWhisker, hasBottomWhisker, crispCorr, crispX, path, halfWidth, isNew = !graphic;
-                    if (point.plotY !== undefined) {
+                    if (typeof point.plotY !== 'undefined') {
                         if (!graphic) {
                             point.graphic = graphic = chart.renderer.path()
                                 .add(series.group);
@@ -5575,14 +5575,15 @@
                         point = points[cursor];
                         point.y = leftPoint.y;
                         if (leftPoint.x <= point.x &&
-                            leftPoint[onKey] !== undefined) {
+                            typeof leftPoint[onKey] !== 'undefined') {
                             if (point.x <= lastX) { // #803
                                 point.plotY = leftPoint[onKey];
                                 // interpolate between points, #666
                                 if (leftPoint.x < point.x &&
                                     !step) {
                                     rightPoint = onData[i + 1];
-                                    if (rightPoint && rightPoint[onKey] !== undefined) {
+                                    if (rightPoint &&
+                                        typeof rightPoint[onKey] !== 'undefined') {
                                         // the distance ratio, between 0 and 1
                                         distanceRatio =
                                             (point.x - leftPoint.x) /
@@ -5615,7 +5616,7 @@
                     // we must remove the shapeArgs (#847). For inverted charts, we need
                     // to calculate position anyway, because series.invertGroups is not
                     // defined
-                    if (point.plotY === undefined || inverted) {
+                    if (typeof point.plotY === 'undefined' || inverted) {
                         if (point.plotX >= 0 &&
                             point.plotX <= xAxis.len) {
                             // We're inside xAxis range
@@ -5637,7 +5638,7 @@
                     // if multiple flags appear at the same x, order them into a stack
                     lastPoint = points[i - 1];
                     if (lastPoint && lastPoint.plotX === point.plotX) {
-                        if (lastPoint.stackIndex === undefined) {
+                        if (typeof lastPoint.stackIndex === 'undefined') {
                             lastPoint.stackIndex = 0;
                         }
                         stackIndex = lastPoint.stackIndex + 1;
@@ -5949,19 +5950,19 @@
                     stackIndex = point.stackIndex;
                     shape = point.options.shape || options.shape;
                     plotY = point.plotY;
-                    if (plotY !== undefined) {
+                    if (typeof plotY !== 'undefined') {
                         plotY = point.plotY + optionsY -
-                            (stackIndex !== undefined &&
+                            (typeof stackIndex !== 'undefined' &&
                                 (stackIndex * options.stackDistance));
                     }
                     // skip connectors for higher level stacked points
-                    point.anchorX = stackIndex ? undefined : point.plotX;
-                    anchorY = stackIndex ? undefined : point.plotY;
+                    point.anchorX = stackIndex ? void 0 : point.plotX;
+                    anchorY = stackIndex ? void 0 : point.plotY;
                     centered = shape !== 'flag';
                     graphic = point.graphic;
                     // Only draw the point if y is defined and the flag is within
                     // the visible area
-                    if (plotY !== undefined &&
+                    if (typeof plotY !== 'undefined' &&
                         plotX >= 0 &&
                         !outsideRight) {
                         // Create the flag
@@ -6161,7 +6162,7 @@
             isValid: function () {
                 // #9233 - Prevent from treating flags as null points (even if
                 // they have no y values defined).
-                return isNumber(this.y) || this.y === undefined;
+                return isNumber(this.y) || typeof this.y === 'undefined';
             }
         });
         // create the flag icon with anchor
@@ -6567,7 +6568,7 @@
                  * @type  {number|undefined}
                  * @since 2.1.9
                  */
-                height: undefined,
+                height: void 0,
                 /**
                  * The border color of the date input boxes.
                  *
@@ -6864,7 +6865,7 @@
                         // event (below). When the series are initialized, but before
                         // the chart is rendered, we have access to the xData array
                         // (#942).
-                        if (dataMax === undefined) {
+                        if (typeof dataMax === 'undefined') {
                             dataMin = Number.MAX_VALUE;
                             dataMax = Number.MIN_VALUE;
                             chart.series.forEach(function (series) {
@@ -6984,7 +6985,8 @@
                 // Extend the buttonOptions with actual range
                 buttonOptions.forEach(rangeSelector.computeButtonRange);
                 // zoomed range based on a pre-selected button index
-                if (selectedOption !== undefined && buttonOptions[selectedOption]) {
+                if (typeof selectedOption !== 'undefined' &&
+                    buttonOptions[selectedOption]) {
                     this.clickButton(selectedOption, false);
                 }
                 addEvent(chart, 'load', function () {
@@ -7199,7 +7201,7 @@
                             // max, use the actual data extreme (#2438).
                             if (isMin) {
                                 if (value > rangeSelector.maxInput.HCTime) {
-                                    value = undefined;
+                                    value = void 0;
                                 }
                                 else if (value < dataMin) {
                                     value = dataMin;
@@ -7207,15 +7209,15 @@
                             }
                             else {
                                 if (value < rangeSelector.minInput.HCTime) {
-                                    value = undefined;
+                                    value = void 0;
                                 }
                                 else if (value > dataMax) {
                                     value = dataMax;
                                 }
                             }
                             // Set the extremes
-                            if (value !== undefined) { // @todo typof undefined
-                                chartAxis.setExtremes(isMin ? value : chartAxis.min, isMin ? chartAxis.max : value, undefined, undefined, { trigger: 'rangeSelectorInput' });
+                            if (typeof value !== 'undefined') { // @todo typof undefined
+                                chartAxis.setExtremes(isMin ? value : chartAxis.min, isMin ? chartAxis.max : value, void 0, void 0, { trigger: 'rangeSelectorInput' });
                             }
                         }
                     }
@@ -7729,13 +7731,13 @@
             }
             if (min <= dataMin) {
                 min = dataMin;
-                if (range === undefined) { // #4501
+                if (typeof range === 'undefined') { // #4501
                     range = getTrueRange(min, rangeOptions.count);
                 }
                 this.newMax = Math.min(min + range, this.dataMax);
             }
             if (!isNumber(max)) {
-                min = undefined;
+                min = void 0;
             }
             return min;
         };
@@ -7866,7 +7868,7 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, defined = U.defined, extend = U.extend, isNumber = U.isNumber, isString = U.isString, pick = U.pick, splat = U.splat;
+        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, clamp = U.clamp, defined = U.defined, extend = U.extend, isNumber = U.isNumber, isString = U.isString, pick = U.pick, splat = U.splat;
         // Has a dependency on Navigator due to the use of
         // defaultOptions.navigator
         // Has a dependency on Scrollbar due to the use of
@@ -8098,7 +8100,7 @@
                     if (labelOptions.x === 15) { // default
                         labelOptions.x = 0;
                     }
-                    if (labelOptions.align === undefined) {
+                    if (typeof labelOptions.align === 'undefined') {
                         labelOptions.align = 'right';
                     }
                     panes[key] = this;
@@ -8189,7 +8191,7 @@
                             if (force !== 'pass' &&
                                 (x1 < axisLeft || x1 > axisLeft + axis.width)) {
                                 if (force) {
-                                    x1 = x2 = Math.min(Math.max(axisLeft, x1), axisLeft + axis.width);
+                                    x1 = x2 = clamp(x1, axisLeft, axisLeft + axis.width);
                                 }
                                 else {
                                     skip = true;
@@ -8210,7 +8212,7 @@
                             if (force !== 'pass' &&
                                 (y1 < axisTop || y1 > axisTop + axis.height)) {
                                 if (force) {
-                                    y1 = y2 = Math.min(Math.max(axisTop, y1), axis.top + axis.height);
+                                    y1 = y2 = clamp(y1, axisTop, axisTop + axis.height);
                                 }
                                 else {
                                     skip = true;
@@ -8344,7 +8346,7 @@
                 this.toValue(horiz ? e.chartX : e.chartY);
             crossLabel.attr({
                 text: formatOption ?
-                    format(formatOption, { value: value }, chart.time) :
+                    format(formatOption, { value: value }, chart) :
                     options.formatter.call(this, value),
                 x: posx,
                 y: posy,
@@ -8433,8 +8435,8 @@
             this.modifyValue = (compare === 'value' || compare === 'percent') ?
                 function (value, point) {
                     var compareValue = this.compareValue;
-                    if (value !== undefined &&
-                        compareValue !== undefined) { // #2601, #5814
+                    if (typeof value !== 'undefined' &&
+                        typeof compareValue !== 'undefined') { // #2601, #5814
                         // Get the modified value
                         if (compare === 'value') {
                             value -= compareValue;
@@ -8548,7 +8550,8 @@
          */
         Point.prototype.tooltipFormatter = function (pointFormat) {
             var point = this;
-            pointFormat = pointFormat.replace('{point.change}', (point.change > 0 ? '+' : '') + H.numberFormat(point.change, pick(point.series.tooltipOptions.changeDecimals, 2)));
+            var numberFormatter = point.series.chart.numberFormatter;
+            pointFormat = pointFormat.replace('{point.change}', (point.change > 0 ? '+' : '') + numberFormatter(point.change, pick(point.series.tooltipOptions.changeDecimals, 2)));
             return pointTooltipFormatter.apply(this, [pointFormat]);
         };
         /* ************************************************************************** *

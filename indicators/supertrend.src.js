@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -36,8 +36,9 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var correctFloat = U.correctFloat;
         var isArray = U.isArray, objectEach = U.objectEach;
-        var ATR = H.seriesTypes.atr, SMA = H.seriesTypes.sma, merge = H.merge, correctFloat = H.correctFloat;
+        var ATR = H.seriesTypes.atr, SMA = H.seriesTypes.sma, merge = H.merge;
         /* eslint-disable require-jsdoc */
         // Utils:
         function createPointObj(mainSeries, index, close) {
@@ -389,7 +390,7 @@
                 prevY, y, i;
                 if ((xVal.length <= period) || !isArray(yVal[0]) ||
                     yVal[0].length !== 4 || period < 0) {
-                    return false;
+                    return;
                 }
                 ATRData = ATR.prototype.getValues.call(this, series, {
                     period: period

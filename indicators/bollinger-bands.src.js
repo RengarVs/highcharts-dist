@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -280,7 +280,7 @@
                      *
                      * @type  {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -294,7 +294,7 @@
                     /**
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             tooltip: {
@@ -338,7 +338,7 @@
                 // middle line, top line and bottom line
                 ML, TL, BL, date, xData = [], yData = [], slicedX, slicedY, stdDev, isOHLC, point, i;
                 if (xVal.length < period) {
-                    return false;
+                    return;
                 }
                 isOHLC = isArray(yVal[0]);
                 for (i = period; i <= yValLen; i++) {

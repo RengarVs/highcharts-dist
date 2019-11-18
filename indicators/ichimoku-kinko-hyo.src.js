@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -116,11 +116,11 @@
             var ret = [], isEmptyRange;
             [].forEach.call(arguments, function (arr, i) {
                 ret.push(H.approximations.average(arr));
-                isEmptyRange = !isEmptyRange && ret[i] === undefined;
+                isEmptyRange = !isEmptyRange && typeof ret[i] === 'undefined';
             });
             // Return undefined when first elem. is undefined and let
             // sum method handle null (#7377)
-            return isEmptyRange ? undefined : ret;
+            return isEmptyRange ? void 0 : ret;
         };
         /* eslint-enable require-jsdoc */
         /**
@@ -188,7 +188,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -205,7 +205,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -222,7 +222,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -239,7 +239,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -256,7 +256,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -593,7 +593,7 @@
                 if (xVal.length <= period ||
                     !isArray(yVal[0]) ||
                     yVal[0].length !== 4) {
-                    return false;
+                    return;
                 }
                 // Add timestamps at the beginning
                 dateStart = xVal[0] - (period * closestPointRange);

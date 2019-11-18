@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v7.2.1-modified (2019-11-18)
  *
  * Highcharts funnel module
  *
@@ -138,17 +138,10 @@
             edgeWidth: 0,
             colorByPoint: true,
             showInLegend: false,
-            /**
-             * @default {"align": "right", "crop": false, "inside": false, "overflow": "allow"}
-             */
             dataLabels: {
-                /** @ignore-option */
                 align: 'right',
-                /** @ignore-option */
                 crop: false,
-                /** @ignore-option */
                 inside: false,
-                /** @ignore-option */
                 overflow: 'allow'
             }
         }, {

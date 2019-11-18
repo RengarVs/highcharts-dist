@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -81,14 +81,14 @@
             getValues: function (series, params) {
                 var period = params.period, xVal = series.xData, yVal = series.yData, yValLen = yVal ? yVal.length : 0, xValue = xVal[0], yValue = yVal[0], MM = [], xData = [], yData = [], index, i, points, MMPoint;
                 if (xVal.length <= period) {
-                    return false;
+                    return;
                 }
                 // Switch index for OHLC / Candlestick / Arearange
                 if (isArray(yVal[0])) {
                     yValue = yVal[0][3];
                 }
                 else {
-                    return false;
+                    return;
                 }
                 // Starting point
                 points = [

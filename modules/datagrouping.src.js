@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Data grouping module
  *
@@ -53,8 +53,8 @@
         * @name Highcharts.DataGroupingInfoObject#start
         * @type {number}
         */
-        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, defined = U.defined, extend = U.extend, isNumber = U.isNumber, pick = U.pick;
-        var addEvent = H.addEvent, Axis = H.Axis, correctFloat = H.correctFloat, defaultPlotOptions = H.defaultPlotOptions, format = H.format, merge = H.merge, Point = H.Point, Series = H.Series, Tooltip = H.Tooltip;
+        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, correctFloat = U.correctFloat, defined = U.defined, extend = U.extend, isNumber = U.isNumber, pick = U.pick;
+        var addEvent = H.addEvent, Axis = H.Axis, defaultPlotOptions = H.defaultPlotOptions, format = H.format, merge = H.merge, Point = H.Point, Series = H.Series, Tooltip = H.Tooltip;
         /* ************************************************************************** *
          *  Start data grouping module                                                *
          * ************************************************************************** */
@@ -108,25 +108,25 @@
                 });
                 // Return undefined when first elem. is undefined and let
                 // sum method handle null (#7377)
-                return ret[0] === undefined ? undefined : ret;
+                return typeof ret[0] === 'undefined' ? void 0 : ret;
             },
             open: function (arr) {
-                return arr.length ? arr[0] : (arr.hasNulls ? null : undefined);
+                return arr.length ? arr[0] : (arr.hasNulls ? null : void 0);
             },
             high: function (arr) {
                 return arr.length ?
                     arrayMax(arr) :
-                    (arr.hasNulls ? null : undefined);
+                    (arr.hasNulls ? null : void 0);
             },
             low: function (arr) {
                 return arr.length ?
                     arrayMin(arr) :
-                    (arr.hasNulls ? null : undefined);
+                    (arr.hasNulls ? null : void 0);
             },
             close: function (arr) {
                 return arr.length ?
                     arr[arr.length - 1] :
-                    (arr.hasNulls ? null : undefined);
+                    (arr.hasNulls ? null : void 0);
             },
             // ohlc and range are special cases where a multidimensional array is
             // input and an array is output
@@ -193,7 +193,7 @@
             for (i; i <= dataLength; i++) {
                 // when a new group is entered, summarize and initialize
                 // the previous group
-                while ((groupPositions[pos + 1] !== undefined &&
+                while ((typeof groupPositions[pos + 1] !== 'undefined' &&
                     xData[i] >= groupPositions[pos + 1]) ||
                     i === dataLength) { // get the last group
                     // get group x and y
@@ -219,7 +219,7 @@
                         });
                     }
                     // push the grouped data
-                    if (groupedY !== undefined) {
+                    if (typeof groupedY !== 'undefined') {
                         groupedXData.push(pointX);
                         groupedYData.push(groupedY);
                         groupMap.push(series.dataGroupInfo);
@@ -554,7 +554,7 @@
         // Extend the original method, make the tooltip's header reflect the grouped
         // range.
         addEvent(Tooltip, 'headerFormatter', function (e) {
-            var tooltip = this, time = this.chart.time, labelConfig = e.labelConfig, series = labelConfig.series, options = series.options, tooltipOptions = series.tooltipOptions, dataGroupingOptions = options.dataGrouping, xDateFormat = tooltipOptions.xDateFormat, xDateFormatEnd, xAxis = series.xAxis, currentDataGrouping, dateTimeLabelFormats, labelFormats, formattedKey, formatString = tooltipOptions[(e.isFooter ? 'footer' : 'header') + 'Format'];
+            var tooltip = this, chart = this.chart, time = chart.time, labelConfig = e.labelConfig, series = labelConfig.series, options = series.options, tooltipOptions = series.tooltipOptions, dataGroupingOptions = options.dataGrouping, xDateFormat = tooltipOptions.xDateFormat, xDateFormatEnd, xAxis = series.xAxis, currentDataGrouping, dateTimeLabelFormats, labelFormats, formattedKey, formatString = tooltipOptions[(e.isFooter ? 'footer' : 'header') + 'Format'];
             // apply only to grouped series
             if (xAxis &&
                 xAxis.options.type === 'datetime' &&
@@ -597,7 +597,7 @@
                 e.text = format(formatString, {
                     point: extend(labelConfig.point, { key: formattedKey }),
                     series: series
-                }, time);
+                }, chart);
                 e.preventDefault();
             }
         });
@@ -667,7 +667,7 @@
          *
          * @function Highcharts.Axis#setDataGrouping
          *
-         * @param {boolean|Highcharts.PlotSeriesDataGroupingOptions} [dataGrouping]
+         * @param {boolean|Highcharts.DataGroupingOptionsObject} [dataGrouping]
          *        A `dataGrouping` configuration. Use `false` to disable data grouping
          *        dynamically.
          *
@@ -724,6 +724,7 @@
          * the first point instance are copied over to the group point. This can be
          * altered through a custom `approximation` callback function.
          *
+         * @declare   Highcharts.DataGroupingOptionsObject
          * @product   highstock
          * @requires  modules/datagrouping
          * @apioption plotOptions.series.dataGrouping

@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v7.2.1-modified (2019-11-18)
  *
  * Bullet graph series type for Highcharts
  *
@@ -174,7 +174,7 @@
                                 targetGraphic.element.point = point;
                             }
                             else {
-                                targetGraphic.element.point = undefined;
+                                targetGraphic.element.point = void 0;
                             }
                         }
                         else {
@@ -191,7 +191,7 @@
                                     x: point.x,
                                     y: targetVal,
                                     options: {}
-                                }).color || series.color)) || undefined, point.color, series.color),
+                                }).color || series.color)) || void 0, point.color, series.color),
                                 stroke: pick(targetOptions.borderColor, point.borderColor, series.options.borderColor),
                                 'stroke-width': targetOptions.borderWidth
                             });

@@ -24,17 +24,6 @@ declare module "../highcharts" {
          */
         value?: (number|null);
     }
-    interface PointOptionsObject {
-        /**
-         * Heatmap series only. Point padding for a single point.
-         */
-        pointPadding?: number;
-        /**
-         * Heatmap series only. The value of the point, resulting in a color
-         * controled by options as set in the colorAxis configuration.
-         */
-        value?: (number|null);
-    }
 }
 export default factory;
 export let Highcharts: typeof _Highcharts;

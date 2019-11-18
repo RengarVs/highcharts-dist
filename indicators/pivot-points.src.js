@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -97,9 +97,7 @@
             },
             enableMouseTracking: false,
             dataLabels: {
-                /** @ignore-option */
                 enabled: true,
-                /** @ignore-option */
                 format: '{point.pivotLine}'
             },
             dataGrouping: {
@@ -211,7 +209,7 @@
                 if (xVal.length < period ||
                     !isArray(yVal[0]) ||
                     yVal[0].length !== 4) {
-                    return false;
+                    return;
                 }
                 for (i = period + 1; i <= yValLen + period; i += period) {
                     slicedX = xVal.slice(i - period - 1, i);

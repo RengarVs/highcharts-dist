@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -163,7 +163,7 @@
              *
              * @type {string}
              */
-            name: undefined,
+            name: void 0,
             tooltip: {
                 /**
                  * Number of decimals in indicator series.
@@ -176,7 +176,7 @@
              *
              * @type {string}
              */
-            linkedTo: undefined,
+            linkedTo: void 0,
             /**
              * Whether to compare indicator to the main series values
              * or indicator values.
@@ -352,7 +352,7 @@
             getValues: function (series, params) {
                 var period = params.period, xVal = series.xData, yVal = series.yData, yValLen = yVal.length, range = 0, sum = 0, SMA = [], xData = [], yData = [], index = -1, i, SMAPoint;
                 if (xVal.length < period) {
-                    return false;
+                    return;
                 }
                 // Switch index for OHLC / Candlestick / Arearange
                 if (isArray(yVal[0])) {

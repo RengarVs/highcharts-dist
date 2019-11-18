@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -203,7 +203,7 @@
 
         return multipleLinesMixin;
     });
-    _registerModule(_modules, 'indicators/keltner-channels.src.js', [_modules['parts/Globals.js'], _modules['mixins/multipe-lines.js']], function (H, multipleLinesMixin) {
+    _registerModule(_modules, 'indicators/keltner-channels.src.js', [_modules['parts/Globals.js'], _modules['parts/Utilities.js'], _modules['mixins/multipe-lines.js']], function (H, U, multipleLinesMixin) {
         /* *
          *
          *  License: www.highcharts.com/license
@@ -211,7 +211,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var SMA = H.seriesTypes.sma, EMA = H.seriesTypes.ema, ATR = H.seriesTypes.atr, merge = H.merge, correctFloat = H.correctFloat;
+        var correctFloat = U.correctFloat;
+        var SMA = H.seriesTypes.sma, EMA = H.seriesTypes.ema, ATR = H.seriesTypes.atr, merge = H.merge;
         /**
          * The Keltner Channels series type.
          *
@@ -271,7 +272,7 @@
                      * Color of the line. If not set, it's inherited from
                      * `plotOptions.keltnerchannels.color`
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -282,7 +283,7 @@
             topLine: {
                 styles: {
                     lineWidth: 1,
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             tooltip: {
@@ -335,7 +336,7 @@
                     period: periodATR
                 }), pointEMA, pointATR, xData = [], yData = [], i;
                 if (yValLen < period) {
-                    return false;
+                    return;
                 }
                 for (i = period; i <= yValLen; i++) {
                     pointEMA = seriesEMA.values[i - period];

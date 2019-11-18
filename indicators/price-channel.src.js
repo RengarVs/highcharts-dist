@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -354,7 +354,7 @@
                 // middle line, top line and bottom line
                 ML, TL, BL, date, low = 2, high = 1, xData = [], yData = [], slicedY, extremes, i;
                 if (yValLen < period) {
-                    return false;
+                    return;
                 }
                 for (i = period; i <= yValLen; i++) {
                     date = xVal[i - 1];

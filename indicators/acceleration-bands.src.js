@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -203,7 +203,7 @@
 
         return multipleLinesMixin;
     });
-    _registerModule(_modules, 'indicators/acceleration-bands.src.js', [_modules['parts/Globals.js'], _modules['mixins/multipe-lines.js']], function (H, multipleLinesMixin) {
+    _registerModule(_modules, 'indicators/acceleration-bands.src.js', [_modules['parts/Globals.js'], _modules['parts/Utilities.js'], _modules['mixins/multipe-lines.js']], function (H, U, multipleLinesMixin) {
         /* *
          *
          *  License: www.highcharts.com/license
@@ -211,7 +211,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var SMA = H.seriesTypes.sma, merge = H.merge, correctFloat = H.correctFloat;
+        var correctFloat = U.correctFloat;
+        var SMA = H.seriesTypes.sma, merge = H.merge;
         /* eslint-disable valid-jsdoc */
         /**
          * @private
@@ -316,7 +317,7 @@
                 // middle line, top line and bottom line
                 ML, TL, BL, date, bandBase, pointSMA, ubSMA, lbSMA, low = 2, high = 1, xData = [], yData = [], slicedX, slicedY, i;
                 if (yValLen < period) {
-                    return false;
+                    return;
                 }
                 for (i = 0; i <= yValLen; i++) {
                     // Get UB and LB values of every point. This condition

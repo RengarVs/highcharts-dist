@@ -160,12 +160,22 @@ declare module "../highcharts.src" {
      * @param context
      *        Context to apply to the format string.
      *
-     * @param time
-     *        A `Time` instance for date formatting, passed on to H.format().
+     * @param chart
+     *        A `Chart` instance with a time object and numberFormatter, passed
+     *        on to H.format().
      *
      * @return The formatted string.
      */
-    function i18nFormat(formatString: string, context: Dictionary<any>, time: Time): string;
+    function i18nFormat(formatString: string, context: Dictionary<any>, chart: Chart): string;
+    /**
+     * Put accessible info on series and points of a series.
+     *
+     * @param series
+     *        The series to add info on.
+     */
+    function describeSeries(series: Series): void;
+    function getAxisDescription(axis: Axis): string;
+    function getChartTitle(): string;
 }
 export default factory;
 export let Highcharts: typeof _Highcharts;

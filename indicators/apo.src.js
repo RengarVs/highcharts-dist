@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -166,7 +166,7 @@
                 if (periods.length !== 2 || periods[1] <= periods[0]) {
                     error('Error: "APO requires two periods. Notice, first period ' +
                         'should be lower than the second one."');
-                    return false;
+                    return;
                 }
                 SPE = EMA.prototype.getValues.call(this, series, {
                     index: index,
@@ -178,7 +178,7 @@
                 });
                 // Check if ema is calculated properly, if not skip
                 if (!SPE || !LPE) {
-                    return false;
+                    return;
                 }
                 periodsOffset = periods[1] - periods[0];
                 for (i = 0; i < LPE.yData.length; i++) {

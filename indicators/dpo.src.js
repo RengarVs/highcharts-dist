@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -36,8 +36,7 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var pick = U.pick;
-        var correctFloat = H.correctFloat;
+        var correctFloat = U.correctFloat, pick = U.pick;
         /* eslint-disable valid-jsdoc */
         // Utils
         /**
@@ -101,7 +100,7 @@
                 // 0- date, 1- Detrended Price Oscillator
                 DPO = [], xData = [], yData = [], sum = 0, oscillator, periodIndex, rangeIndex, price, i, j;
                 if (xVal.length <= range) {
-                    return false;
+                    return;
                 }
                 // Accumulate first N-points for SMA
                 for (i = 0; i < period - 1; i++) {

@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v7.2.1-modified (2019-11-18)
  *
  * (c) 2009-2018 Torstein Honsi
  *
@@ -83,7 +83,7 @@
              */
             setOptions: function (options) {
                 // Set options. Angular charts have a default background (#3318)
-                this.options = options = merge(this.defaultOptions, this.chart.angular ? { background: {} } : undefined, options);
+                this.options = options = merge(this.defaultOptions, this.chart.angular ? { background: {} } : void 0, options);
             },
             /**
              * Render the pane with its backgrounds.
@@ -262,7 +262,7 @@
                 /**
                  * The background color or gradient for the pane.
                  *
-                 * @type    {Highcharts.GradientColorObject}
+                 * @type    {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                  * @default { linearGradient: { x1: 0, y1: 0, x2: 0, y2: 1 }, stops: [[0, #ffffff], [1, #e6e6e6]] }
                  * @since   2.3.0
                  * @product highcharts
@@ -364,8 +364,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var extend = U.extend, pick = U.pick, pInt = U.pInt;
-        var addEvent = H.addEvent, Axis = H.Axis, merge = H.merge, noop = H.noop, Tick = H.Tick, wrap = H.wrap, correctFloat = H.correctFloat, 
+        var correctFloat = U.correctFloat, extend = U.extend, pick = U.pick, pInt = U.pInt;
+        var addEvent = H.addEvent, Axis = H.Axis, merge = H.merge, noop = H.noop, Tick = H.Tick, wrap = H.wrap, 
         // @todo Extract this to a new file:
         hiddenAxisMixin, 
         // @todo Extract this to a new file
@@ -474,7 +474,7 @@
              */
             getLinePath: function (lineWidth, radius) {
                 var center = this.center, end, chart = this.chart, r = pick(radius, center[2] / 2 - this.offset), path;
-                if (this.isCircular || radius !== undefined) {
+                if (this.isCircular || typeof radius !== 'undefined') {
                     path = this.chart.renderer.symbols.arc(this.left + center[0], this.top + center[1], r, r, {
                         start: this.startAngleRad,
                         end: this.endAngleRad,
@@ -539,7 +539,7 @@
                 // one closestPointRange is added to the X axis to prevent the last
                 // point from overlapping the first.
                 this.autoConnect = (this.isCircular &&
-                    pick(this.userMax, this.options.max) === undefined &&
+                    typeof pick(this.userMax, this.options.max) === 'undefined' &&
                     correctFloat(this.endAngleRad - this.startAngleRad) ===
                         correctFloat(2 * Math.PI));
                 if (this.autoConnect) {
@@ -833,7 +833,7 @@
         // (#4920)
         addEvent(Axis, 'autoLabelAlign', function (e) {
             if (this.isRadial) {
-                e.align = undefined;
+                e.align = void 0;
                 e.preventDefault();
             }
         });
@@ -1010,62 +1010,6 @@
         * @name Highcharts.PointOptionsObject#low
         * @type {number|undefined}
         */
-        /**
-         * Extended data labels for range series types. Range series data labels use no
-         * `x` and `y` options. Instead, they have `xLow`, `xHigh`, `yLow` and `yHigh`
-         * options to allow the higher and lower data label sets individually.
-         *
-         * @interface Highcharts.SeriesAreaRangeDataLabelsOptionsObject
-         * @extends Highcharts.DataLabelsOptionsObject
-         * @since 2.3.0
-         * @product highcharts highstock
-         */ /**
-        * X offset of the higher data labels relative to the point value.
-        *
-        * @see {@link https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/plotoptions/arearange-datalabels/|Highcharts-Demo:}
-        *      Data labels on range series
-        *
-        * @name Highcharts.SeriesAreaRangeDataLabelsOptionsObject#xHigh
-        * @type {number|undefined}
-        * @default 0
-        * @since 2.3.0
-        * @product highcharts highstock
-        */ /**
-        * X offset of the lower data labels relative to the point value.
-        *
-        * @see {@link https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/plotoptions/arearange-datalabels/|Highcharts-Demo:}
-        *      Data labels on range series
-        * @see {@link https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/plotoptions/arearange-datalabels/|Highcharts-Demo:}
-        *      Data labels on range series
-        *
-        * @name Highcharts.SeriesAreaRangeDataLabelsOptionsObject#xLow
-        * @type {number|undefined}
-        * @default 0
-        * @since 2.3.0
-        * @product highcharts highstock
-        */ /**
-        * Y offset of the higher data labels relative to the point value.
-        *
-        * @see {@link https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/plotoptions/arearange-datalabels/|Highcharts-Demo:}
-        *      Data labels on range series
-        *
-        * @name Highcharts.SeriesAreaRangeDataLabelsOptionsObject#yHigh
-        * @type {number|undefined}
-        * @default 0
-        * @since 2.3.0
-        * @product highcharts highstock
-        */ /**
-        * Y offset of the lower data labels relative to the point value.
-        *
-        * @see {@link https://jsfiddle.net/gh/get/library/pure/highcharts/highcharts/tree/master/samples/highcharts/plotoptions/arearange-datalabels/|Highcharts-Demo:}
-        *      Data labels on range series
-        *
-        * @name Highcharts.SeriesAreaRangeDataLabelsOptionsObject#yLow
-        * @type {number|undefined}
-        * @default 0
-        * @since 2.3.0
-        * @product highcharts highstock
-        */
         var defined = U.defined, extend = U.extend, isArray = U.isArray, isNumber = U.isNumber, pick = U.pick;
         var noop = H.noop, Series = H.Series, seriesType = H.seriesType, seriesTypes = H.seriesTypes, seriesProto = Series.prototype, pointProto = H.Point.prototype;
         /**
@@ -1120,23 +1064,50 @@
              */
             trackByArea: true,
             /**
-             * @type    {Highcharts.SeriesAreaRangeDataLabelsOptionsObject|Array<Highcharts.SeriesAreaRangeDataLabelsOptionsObject>}
-             * @default {"xLow": 0, "xHigh": 0, "yLow": 0, "yHigh": 0}
+             * Extended data labels for range series types. Range series data labels use
+             * no `x` and `y` options. Instead, they have `xLow`, `xHigh`, `yLow` and
+             * `yHigh` options to allow the higher and lower data label sets
+             * individually.
+             *
+             * @declare Highcharts.SeriesAreaRangeDataLabelsOptionsObject
+             * @exclude x, y
+             * @since   2.3.0
+             * @product highcharts highstock
              *
              * @private
              */
             dataLabels: {
-                /** @ignore-option */
                 align: null,
-                /** @ignore-option */
                 verticalAlign: null,
-                /** @ignore-option */
+                /**
+                 * X offset of the lower data labels relative to the point value.
+                 *
+                 * @sample highcharts/plotoptions/arearange-datalabels/
+                 *         Data labels on range series
+                 * @sample highcharts/plotoptions/arearange-datalabels/
+                 *         Data labels on range series
+                 */
                 xLow: 0,
-                /** @ignore-option */
+                /**
+                 * X offset of the higher data labels relative to the point value.
+                 *
+                 * @sample highcharts/plotoptions/arearange-datalabels/
+                 *         Data labels on range series
+                 */
                 xHigh: 0,
-                /** @ignore-option */
+                /**
+                 * Y offset of the lower data labels relative to the point value.
+                 *
+                 * @sample highcharts/plotoptions/arearange-datalabels/
+                 *         Data labels on range series
+                 */
                 yLow: 0,
-                /** @ignore-option */
+                /**
+                 * Y offset of the higher data labels relative to the point value.
+                 *
+                 * @sample highcharts/plotoptions/arearange-datalabels/
+                 *         Data labels on range series
+                 */
                 yHigh: 0
             }
             // Prototype members
@@ -1447,7 +1418,7 @@
                     point.negative = point.high < (series.options.threshold || 0);
                     point.zone = (series.zones.length && point.getZone());
                     if (!series.chart.polar) {
-                        point.isInside = point.isTopInside = (point.plotY !== undefined &&
+                        point.isInside = point.isTopInside = (typeof point.plotY !== 'undefined' &&
                             point.plotY >= 0 &&
                             point.plotY <= series.yAxis.len && // #3519
                             point.plotX >= 0 &&
@@ -1519,7 +1490,7 @@
                     series.stateMarkerGraphic = series.lowerStateMarkerGraphic;
                     // Lower marker is stored at stateMarkerGraphic
                     // to avoid reference duplication (#7021)
-                    series.lowerStateMarkerGraphic = undefined;
+                    series.lowerStateMarkerGraphic = void 0;
                 }
                 pointProto.setState.apply(this, arguments);
             },
@@ -1627,7 +1598,7 @@
          * @apioption series.arearange.data
          */
         /**
-         * @type      {Highcharts.SeriesAreaRangeDataLabelsOptionsObject|Array<Highcharts.SeriesAreaRangeDataLabelsOptionsObject>}
+         * @extends   series.arearange.dataLabels
          * @product   highcharts highstock
          * @apioption series.arearange.data.dataLabels
          */
@@ -1754,7 +1725,7 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var pick = U.pick;
+        var clamp = U.clamp, pick = U.pick;
         var defaultPlotOptions = H.defaultPlotOptions, merge = H.merge, noop = H.noop, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
         var colProto = seriesTypes.column.prototype;
         /**
@@ -1779,8 +1750,8 @@
              * `yLow` and `yHigh` options to allow the higher and lower data label
              * sets individually.
              *
-             * @type      {Highcharts.SeriesAreaRangeDataLabelsOptionsObject|Array<Highcharts.SeriesAreaRangeDataLabelsOptionsObject>}
-             * @default   {"xLow": 0, "xHigh": 0, "yLow": 0, "yHigh": 0}
+             * @declare   Highcharts.SeriesAreaRangeDataLabelsOptionsObject
+             * @extends   plotOptions.arearange.dataLabels
              * @since     2.3.0
              * @product   highcharts highstock
              * @apioption plotOptions.columnrange.dataLabels
@@ -1818,7 +1789,7 @@
                  * @private
                  */
                 function safeBounds(pixelPos) {
-                    return Math.min(Math.max(-safeDistance, pixelPos), safeDistance);
+                    return clamp(pixelPos, -safeDistance, safeDistance);
                 }
                 colProto.translate.apply(series);
                 // Set plotLow and plotHigh
@@ -1968,7 +1939,7 @@
          * @apioption series.columnrange.data
          */
         /**
-         * @type      {Highcharts.SeriesAreaRangeDataLabelsOptionsObject|Array<Highcharts.SeriesAreaRangeDataLabelsOptionsObject>}
+         * @extends   series.columnrange.dataLabels
          * @product   highcharts highstock
          * @apioption series.columnrange.data.dataLabels
          */
@@ -1995,7 +1966,7 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var pick = U.pick;
+        var clamp = U.clamp, pick = U.pick;
         var seriesType = H.seriesType, seriesTypes = H.seriesTypes;
         var colProto = seriesTypes.column.prototype;
         /**
@@ -2059,7 +2030,7 @@
                 colProto.translate.apply(series);
                 // Record the new values
                 series.points.forEach(function (point) {
-                    var yBottom = pick(point.yBottom, translatedThreshold), safeDistance = 999 + Math.abs(yBottom), plotY = Math.min(Math.max(-safeDistance, point.plotY), yAxis.len + safeDistance), 
+                    var yBottom = pick(point.yBottom, translatedThreshold), safeDistance = 999 + Math.abs(yBottom), plotY = clamp(point.plotY, -safeDistance, yAxis.len + safeDistance), 
                     // Don't draw too far outside plot area
                     // (#1303, #2241, #4264)
                     barX = point.plotX + pointXOffset, barW = seriesBarW / 2, barY = Math.min(plotY, yBottom), barH = Math.max(plotY, yBottom) - barY, stackTotal, stackHeight, topPointY, topXwidth, bottomXwidth, invBarPos, x1, x2, x3, x4, y1, y2;
@@ -2250,7 +2221,7 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var isNumber = U.isNumber, pick = U.pick, pInt = U.pInt;
+        var clamp = U.clamp, isNumber = U.isNumber, pick = U.pick, pInt = U.pInt;
         var merge = H.merge, noop = H.noop, Series = H.Series, seriesType = H.seriesType, TrackerMixin = H.TrackerMixin;
         /**
          * Gauges are circular plots displaying one or more values with a dial pointing
@@ -2291,23 +2262,14 @@
              * @product highcharts
              */
             dataLabels: {
-                /** @ignore-option */
                 borderColor: '#cccccc',
-                /** @ignore-option */
                 borderRadius: 3,
-                /** @ignore-option */
                 borderWidth: 1,
-                /** @ignore-option */
                 crop: false,
-                /** @ignore-option */
                 defer: false,
-                /** @ignore-option */
                 enabled: true,
-                /** @ignore-option */
                 verticalAlign: 'top',
-                /** @ignore-option */
                 y: 15,
-                /** @ignore-option */
                 zIndex: 2
             },
             /**
@@ -2439,7 +2401,6 @@
              *         Allow 5 degrees overshoot
              *
              * @type      {number}
-             * @default   0
              * @since     3.0.10
              * @product   highcharts
              * @apioption plotOptions.gauge.overshoot
@@ -2544,12 +2505,10 @@
                         100), rearLength = ((pInt(pick(dialOptions.rearLength, '10%')) * radius) /
                         100), baseWidth = dialOptions.baseWidth || 3, topWidth = dialOptions.topWidth || 1, overshoot = options.overshoot, rotation = yAxis.startAngleRad + yAxis.translate(point.y, null, null, null, true);
                     // Handle the wrap and overshoot options
-                    if (isNumber(overshoot)) {
-                        overshoot = overshoot / 180 * Math.PI;
-                        rotation = Math.max(yAxis.startAngleRad - overshoot, Math.min(yAxis.endAngleRad + overshoot, rotation));
-                    }
-                    else if (options.wrap === false) {
-                        rotation = Math.max(yAxis.startAngleRad, Math.min(yAxis.endAngleRad, rotation));
+                    if (isNumber(overshoot) || options.wrap === false) {
+                        overshoot = isNumber(overshoot) ?
+                            (overshoot / 180 * Math.PI) : 0;
+                        rotation = clamp(rotation, yAxis.startAngleRad - overshoot, yAxis.endAngleRad + overshoot);
                     }
                     rotation = rotation * 180 / Math.PI;
                     point.shapeType = 'path';
@@ -3029,7 +2988,7 @@
                 doQuartiles = series.doQuartiles !== false, pointWiskerLength, whiskerLength = series.options.whiskerLength;
                 points.forEach(function (point) {
                     var graphic = point.graphic, verb = graphic ? 'animate' : 'attr', shapeArgs = point.shapeArgs, boxAttr = {}, stemAttr = {}, whiskersAttr = {}, medianAttr = {}, color = point.color || series.color;
-                    if (point.plotY !== undefined) {
+                    if (typeof point.plotY !== 'undefined') {
                         // crisp vector coordinates
                         width = shapeArgs.width;
                         left = Math.floor(shapeArgs.x);
@@ -3462,8 +3421,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, isNumber = U.isNumber, objectEach = U.objectEach, pick = U.pick;
-        var correctFloat = H.correctFloat, addEvent = H.addEvent, Axis = H.Axis, Chart = H.Chart, Point = H.Point, Series = H.Series, StackItem = H.StackItem, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
+        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, correctFloat = U.correctFloat, isNumber = U.isNumber, objectEach = U.objectEach, pick = U.pick;
+        var addEvent = H.addEvent, Axis = H.Axis, Chart = H.Chart, Point = H.Point, Series = H.Series, StackItem = H.StackItem, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
         /**
          * Returns true if the key is a direct property of the object.
          * @private
@@ -3481,6 +3440,10 @@
                     changed: false
                 };
             }
+        });
+        addEvent(Axis, 'afterBuildStacks', function () {
+            this.waterfallStacks.changed = false;
+            delete this.waterfallStacks.alreadyChanged;
         });
         addEvent(Chart, 'beforeRedraw', function () {
             var axes = this.axes, series = this.series, i = series.length;
@@ -3511,7 +3474,7 @@
          * @function Highcharts.Axis#renderWaterfallStackTotals
          */
         Axis.prototype.renderWaterfallStackTotals = function () {
-            var yAxis = this, waterfallStacks = yAxis.waterfallStacks, stackTotalGroup = yAxis.stackTotalGroup, dummyStackItem = new StackItem(yAxis, yAxis.options.stackLabels, false, 0, undefined);
+            var yAxis = this, waterfallStacks = yAxis.waterfallStacks, stackTotalGroup = yAxis.stackTotalGroup, dummyStackItem = new StackItem(yAxis, yAxis.options.stackLabels, false, 0, void 0);
             yAxis.dummyStackItem = dummyStackItem;
             // Render each waterfall stack total
             objectEach(waterfallStacks, function (type) {
@@ -3564,7 +3527,6 @@
              * @apioption plotOptions.waterfall.upColor
              */
             dataLabels: {
-                /** @ignore-option */
                 inside: true
             },
             /**
@@ -3904,7 +3866,7 @@
                             yPos
                         ];
                     }
-                    if (!stacking &&
+                    if (!stacking && d &&
                         (prevPoint.y < 0 && !reversedYAxis) ||
                         (prevPoint.y > 0 && reversedYAxis)) {
                         d[2] += prevArgs.height;
@@ -3924,7 +3886,7 @@
             },
             // Waterfall has stacking along the x-values too.
             setStackedPoints: function () {
-                var series = this, options = series.options, waterfallStacks = series.yAxis.waterfallStacks, seriesThreshold = options.threshold, stackThreshold = seriesThreshold || 0, interSum = stackThreshold, stackKey = series.stackKey, xData = series.xData, xLength = xData.length, actualStack, actualStackX, totalYVal, actualSum, prevSum, statesLen, posTotal, negTotal, xPoint, yVal, x;
+                var series = this, options = series.options, waterfallStacks = series.yAxis.waterfallStacks, seriesThreshold = options.threshold, stackThreshold = seriesThreshold || 0, interSum = stackThreshold, stackKey = series.stackKey, xData = series.xData, xLength = xData.length, actualStack, actualStackX, totalYVal, actualSum, prevSum, statesLen, posTotal, negTotal, xPoint, yVal, x, alreadyChanged, changed;
                 // function responsible for calculating correct values for stackState
                 // array of each stack item. The arguments are: firstS - the value for
                 // the first state, nextS - the difference between the previous and the
@@ -3949,13 +3911,22 @@
                 // code responsible for creating stacks for waterfall series
                 if (series.visible ||
                     !series.chart.options.chart.ignoreHiddenSeries) {
+                    changed = waterfallStacks.changed;
+                    alreadyChanged = waterfallStacks.alreadyChanged;
+                    // in case of a redraw, stack for each x value must be
+                    // emptied (only for the first series in a specific stack)
+                    // and recalculated once more
+                    if (alreadyChanged &&
+                        alreadyChanged.indexOf(stackKey) < 0) {
+                        changed = true;
+                    }
                     if (!waterfallStacks[stackKey]) {
                         waterfallStacks[stackKey] = {};
                     }
                     actualStack = waterfallStacks[stackKey];
                     for (var i = 0; i < xLength; i++) {
                         x = xData[i];
-                        if (!actualStack[x] || waterfallStacks.changed) {
+                        if (!actualStack[x] || changed) {
                             actualStack[x] = {
                                 negTotal: 0,
                                 posTotal: 0,
@@ -3963,10 +3934,10 @@
                                 threshold: 0,
                                 stateIndex: 0,
                                 stackState: [],
-                                label: ((waterfallStacks.changed &&
+                                label: ((changed &&
                                     actualStack[x]) ?
                                     actualStack[x].label :
-                                    undefined)
+                                    void 0)
                             };
                         }
                         actualStackX = actualStack[x];
@@ -4010,6 +3981,10 @@
                         stackThreshold += actualStackX.stackTotal;
                     }
                     waterfallStacks.changed = false;
+                    if (!waterfallStacks.alreadyChanged) {
+                        waterfallStacks.alreadyChanged = [];
+                    }
+                    waterfallStacks.alreadyChanged.push(stackKey);
                 }
             },
             // Extremes for a non-stacked series are recorded in processData.
@@ -4322,7 +4297,7 @@
         * @type {number}
         */
         var arrayMax = U.arrayMax, arrayMin = U.arrayMin, isNumber = U.isNumber, objectEach = U.objectEach, pick = U.pick;
-        var Series = H.Series, Legend = H.Legend, Chart = H.Chart, addEvent = H.addEvent, wrap = H.wrap, color = H.color, numberFormat = H.numberFormat, merge = H.merge, noop = H.noop, stableSort = H.stableSort, setOptions = H.setOptions;
+        var Series = H.Series, Legend = H.Legend, Chart = H.Chart, addEvent = H.addEvent, wrap = H.wrap, color = H.color, merge = H.merge, noop = H.noop, stableSort = H.stableSort, setOptions = H.setOptions;
         setOptions({
             legend: {
                 /**
@@ -4349,7 +4324,7 @@
                      *
                      * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                      */
-                    borderColor: undefined,
+                    borderColor: void 0,
                     /**
                      * The width of the ranges borders in pixels, can be also
                      * defined for an individual range.
@@ -4365,7 +4340,7 @@
                      *
                      * @type {string}
                      */
-                    className: undefined,
+                    className: void 0,
                     /**
                      * The main color of the bubble legend. Applies to ranges, if
                      * individual color is not defined.
@@ -4377,7 +4352,7 @@
                      *
                      * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                      */
-                    color: undefined,
+                    color: void 0,
                     /**
                      * An additional class name to apply to the bubble legend's
                      * connector graphical elements. This option does not replace
@@ -4388,14 +4363,14 @@
                      *
                      * @type {string}
                      */
-                    connectorClassName: undefined,
+                    connectorClassName: void 0,
                     /**
                      * The color of the connector, can be also defined
                      * for an individual range.
                      *
                      * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                      */
-                    connectorColor: undefined,
+                    connectorColor: void 0,
                     /**
                      * The length of the connectors in pixels. If labels are
                      * centered, the distance is reduced to 0.
@@ -4429,7 +4404,7 @@
                          *
                          * @type {string}
                          */
-                        className: undefined,
+                        className: void 0,
                         /**
                          * Whether to allow data labels to overlap.
                          */
@@ -4456,7 +4431,7 @@
                          *
                          * @type {Highcharts.FormatterCallbackFunction<Highcharts.BubbleLegendFormatterContextObject>}
                          */
-                        formatter: undefined,
+                        formatter: void 0,
                         /**
                          * The alignment of the labels compared to the bubble
                          * legend. Can be one of `left`, `center` or `right`.
@@ -4476,7 +4451,7 @@
                             /** @ignore-option */
                             fontSize: 10,
                             /** @ignore-option */
-                            color: undefined
+                            color: void 0
                         },
                         /**
                          * The x position offset of the label relative to the
@@ -4523,22 +4498,22 @@
                          * Range size value, similar to bubble Z data.
                          * @type {number}
                          */
-                        value: undefined,
+                        value: void 0,
                         /**
                          * The color of the border for individual range.
                          * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                          */
-                        borderColor: undefined,
+                        borderColor: void 0,
                         /**
                          * The color of the bubble for individual range.
                          * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                          */
-                        color: undefined,
+                        color: void 0,
                         /**
                          * The color of the connector for individual range.
                          * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                          */
-                        connectorColor: undefined
+                        connectorColor: void 0
                     },
                     /**
                      * Whether the bubble legend range value should be represented
@@ -4865,9 +4840,10 @@
              */
             formatLabel: function (range) {
                 var options = this.options, formatter = options.labels.formatter, format = options.labels.format;
+                var numberFormatter = this.chart.numberFormatter;
                 return format ? H.format(format, range) :
                     formatter ? formatter.call(range) :
-                        numberFormat(range.value, 1);
+                        numberFormatter(range.value, 1);
             },
             /**
              * By using default chart 'hideOverlappingLabels' method, hide or show
@@ -5194,7 +5170,7 @@
         /**
          * @typedef {"area"|"width"} Highcharts.BubbleSizeByValue
          */
-        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, extend = U.extend, isNumber = U.isNumber, pick = U.pick, pInt = U.pInt;
+        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, clamp = U.clamp, extend = U.extend, isNumber = U.isNumber, pick = U.pick, pInt = U.pInt;
         var Axis = H.Axis, color = H.color, noop = H.noop, Point = H.Point, Series = H.Series, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
         /**
          * A bubble series is a three dimensional series type where each point renders
@@ -5212,14 +5188,10 @@
          */
         seriesType('bubble', 'scatter', {
             dataLabels: {
-                // eslint-disable-next-line valid-jsdoc
-                /** @ignore-option */
                 formatter: function () {
                     return this.point.z;
                 },
-                /** @ignore-option */
                 inside: true,
-                /** @ignore-option */
                 verticalAlign: 'middle'
             },
             /**
@@ -5570,7 +5542,7 @@
                     }
                     else { // below zThreshold
                         // #1691
-                        point.shapeArgs = point.plotY = point.dlBox = undefined;
+                        point.shapeArgs = point.plotY = point.dlBox = void 0;
                     }
                 }
             },
@@ -5618,9 +5590,9 @@
                         // Find the min and max Z
                         zData = series.zData.filter(isNumber);
                         if (zData.length) { // #1735
-                            zMin = pick(seriesOptions.zMin, Math.min(zMin, Math.max(arrayMin(zData), seriesOptions.displayNegative === false ?
+                            zMin = pick(seriesOptions.zMin, clamp(arrayMin(zData), seriesOptions.displayNegative === false ?
                                 seriesOptions.zThreshold :
-                                -Number.MAX_VALUE)));
+                                -Number.MAX_VALUE, zMin));
                             zMax = pick(seriesOptions.zMax, Math.max(zMax, arrayMax(zData)));
                         }
                     }
@@ -5653,7 +5625,7 @@
                     ['min', 'userMin', pxMin],
                     ['max', 'userMax', pxMax]
                 ].forEach(function (keys) {
-                    if (pick(axis.options[keys[0]], axis[keys[1]]) === undefined) {
+                    if (typeof pick(axis.options[keys[0]], axis[keys[1]]) === 'undefined') {
                         axis[keys[0]] += keys[2] / transA;
                     }
                 });
@@ -6483,7 +6455,7 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var defined = U.defined, extend = U.extend, pick = U.pick, setAnimation = U.setAnimation;
+        var clamp = U.clamp, defined = U.defined, extend = U.extend, pick = U.pick, setAnimation = U.setAnimation;
         var addEvent = H.addEvent, Chart = H.Chart;
         /* eslint-disable no-invalid-this, valid-jsdoc */
         H.layouts = {
@@ -6864,9 +6836,9 @@
 
                 */
                 // Limit X-coordinates:
-                node.plotX = Math.max(Math.min(node.plotX, box.width - radius), box.left + radius);
+                node.plotX = clamp(node.plotX, box.left + radius, box.width - radius);
                 // Limit Y-coordinates:
-                node.plotY = Math.max(Math.min(node.plotY, box.height - radius), box.top + radius);
+                node.plotY = clamp(node.plotY, box.top + radius, box.height - radius);
             },
             /**
              * From "A comparison of simulated annealing cooling strategies" by
@@ -7138,7 +7110,7 @@
          *
          * @callback Highcharts.SeriesPackedBubbleDataLabelsFormatterCallbackFunction
          *
-         * @param {Highcharts.SeriesPackedBubbleDataLabelsFormatterContextObject|Highcharts.DataLabelsFormatterContextObject} this
+         * @param {Highcharts.SeriesPackedBubbleDataLabelsFormatterContextObject} this
          *        Data label context to format
          *
          * @return {string}
@@ -7168,72 +7140,7 @@
         * @type {string}
         * @since 7.0.0
         */
-        /**
-         * Data labels options
-         *
-         * @interface Highcharts.SeriesPackedBubbleDataLabelsOptionsObject
-         * @extends Highcharts.DataLabelsOptionsObject
-         * @since 7.0.0
-         */ /**
-        * The
-        * [format string](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting)
-        * specifying what to show for _node_ in the networkgraph. In v7.0 defaults to
-        * `{key}`, since v7.1 defaults to `undefined` and `formatter` is used instead.
-        * @name Highcharts.SeriesPackedBubbleDataLabelsOptionsObject#format
-        * @type {string|undefined}
-        * @since 7.0.0
-        */ /**
-        * Callback JavaScript function to format the data label for a node. Note that
-        * if a `format` is defined, the format takes precedence and the formatter is
-        * ignored.
-        * @name Highcharts.SeriesPackedBubbleDataLabelsOptionsObject#formatter
-        * @type {Highcharts.SeriesPackedBubbleDataLabelsFormatterCallbackFunction|undefined}
-        * @since 7.0.0
-        */ /**
-        * @name Highcharts.SeriesPackedBubbleDataLabelsOptionsObject#parentNodeFormat
-        * @type {string|undefined}
-        * @since 7.1.0
-        */ /**
-        * Callback to format data labels for _parentNodes_. The `parentNodeFormat`
-        * option takes precedence over the `parentNodeFormatter`.
-        * @name Highcharts.SeriesPackedBubbleDataLabelsOptionsObject#parentNodeFormatter
-        * @type {Highcharts.FormatterCallbackFunction<Highcharts.DataLabelsFormatterContextObject>|undefined}
-        * @since 7.1.0
-        */ /**
-        * Options for a _parentNode_ label text.
-        * @sample highcharts/series-packedbubble/packed-dashboard
-        *         Dashboard with dataLabels on parentNodes
-        * @name Highcharts.SeriesPackedBubbleDataLabelsOptionsObject#parentNodeTextPath
-        * @type {Highcharts.SeriesPackedBubbleDataLabelsTextPathOptionsObject|undefined}
-        * @since 7.1.0
-        */ /**
-        * Options for a _node_ label text which should follow marker's shape.
-        * **Note:** Only SVG-based renderer supports this option.
-        * @see {@link Highcharts.SeriesPackedBubbleDataLabelsTextPath#linkTextPath}
-        * @name Highcharts.SeriesPackedBubbleDataLabelsOptionsObject#textPath
-        * @type {Highcharts.SeriesPackedBubbleDataLabelsTextPathOptionsObject|undefined}
-        * @since 7.1.0
-        */
-        /**
-         * **Note:** Only SVG-based renderer supports this option.
-         *
-         * @see {@link Highcharts.SeriesNetworkDataLabelsTextPath#linkTextPath}
-         * @see {@link Highcharts.SeriesNetworkDataLabelsTextPath#textPath}
-         *
-         * @interface Highcharts.SeriesPackedBubbleDataLabelsTextPathOptionsObject
-         * @since 7.1.0
-         */ /**
-        * Presentation attributes for the text path.
-        * @name Highcharts.SeriesPackedBubbleDataLabelsTextPathOptionsObject#attributes
-        * @type {Highcharts.SVGAttributes|undefined}
-        * @since 7.1.0
-        */ /**
-        * Enable or disable `textPath` option for link's or marker's data labels.
-        * @name Highcharts.SeriesPackedBubbleDataLabelsTextPathOptionsObject#enabled
-        * @type {boolean|undefined}
-        * @since 7.1.0
-        */
-        var defined = U.defined, extend = U.extend, isArray = U.isArray, isNumber = U.isNumber, pick = U.pick;
+        var clamp = U.clamp, defined = U.defined, extend = U.extend, extendClass = U.extendClass, isArray = U.isArray, isNumber = U.isNumber, pick = U.pick;
         var seriesType = H.seriesType, Series = H.Series, Point = H.Point, addEvent = H.addEvent, fireEvent = H.fireEvent, Chart = H.Chart, color = H.Color, Reingold = H.layouts['reingold-fruchterman'], NetworkPoint = H.seriesTypes.bubble.prototype.pointClass, dragNodesMixin = H.dragNodesMixin;
         H.networkgraphIntegrations.packedbubble = {
             repulsiveForceFunction: function (d, k, node, repNode) {
@@ -7277,7 +7184,7 @@
             integrate: H.networkgraphIntegrations.verlet.integrate,
             getK: H.noop
         };
-        H.layouts.packedbubble = H.extendClass(Reingold, {
+        H.layouts.packedbubble = extendClass(Reingold, {
             beforeStep: function () {
                 if (this.options.marker) {
                     this.series.forEach(function (series) {
@@ -7460,27 +7367,87 @@
              */
             useSimulation: true,
             /**
-             * @type    {Highcharts.SeriesPackedBubbleDataLabelsOptionsObject|Array<Highcharts.SeriesPackedBubbleDataLabelsOptionsObject>}
-             * @default {"formatter": function () { return this.point.value; }, "parentNodeFormatter": function () { return this.name; }, "parentNodeTextPath": {"enabled: true}, "padding": 0}
+             * @declare Highcharts.SeriesPackedBubbleDataLabelsOptionsObject
              *
              * @private
              */
             dataLabels: {
+                /**
+                 * The
+                 * [format string](https://www.highcharts.com/docs/chart-concepts/labels-and-string-formatting)
+                 * specifying what to show for _node_ in the networkgraph. In v7.0
+                 * defaults to `{key}`, since v7.1 defaults to `undefined` and
+                 * `formatter` is used instead.
+                 *
+                 * @type      {string}
+                 * @since     7.0.0
+                 * @apioption plotOptions.packedBubble.dataLabels.format
+                 */
                 // eslint-disable-next-line valid-jsdoc
-                /** @ignore-option */
+                /**
+                 * Callback JavaScript function to format the data label for a node.
+                 * Note that if a `format` is defined, the format takes precedence
+                 * and the formatter is ignored.
+                 *
+                 * @type  {Highcharts.SeriesPackedBubbleDataLabelsFormatterCallbackFunction}
+                 * @since 7.0.0
+                 */
                 formatter: function () {
                     return this.point.value;
                 },
+                /**
+                 * @type      {string}
+                 * @since     7.1.0
+                 * @apioption plotOptions.packedBubble.dataLabels.parentNodeFormat
+                 */
                 // eslint-disable-next-line valid-jsdoc
-                /** @ignore-option */
+                /**
+                 * Callback to format data labels for _parentNodes_. The
+                 * `parentNodeFormat` option takes precedence over the
+                 * `parentNodeFormatter`.
+                 *
+                 * @type  {Highcharts.SeriesPackedBubbleDataLabelsFormatterCallbackFunction}
+                 * @since 7.1.0
+                 */
                 parentNodeFormatter: function () {
                     return this.name;
                 },
-                /** @ignore-option */
+                /**
+                 * Options for a _parentNode_ label text.
+                 *
+                 * **Note:** Only SVG-based renderer supports this option.
+                 *
+                 * @sample {highcharts} highcharts/series-packedbubble/packed-dashboard
+                 *         Dashboard with dataLabels on parentNodes
+                 *
+                 * @declare Highcharts.SeriesPackedBubbleDataLabelsTextPathOptionsObject
+                 * @since   7.1.0
+                 */
                 parentNodeTextPath: {
+                    /**
+                     * Presentation attributes for the text path.
+                     *
+                     * @type      {Highcharts.SVGAttributes}
+                     * @since     7.1.0
+                     * @apioption plotOptions.packedBubble.dataLabels.attributes
+                     */
+                    /**
+                     * Enable or disable `textPath` option for link's or marker's
+                     * data labels.
+                     *
+                     * @since 7.1.0
+                     */
                     enabled: true
                 },
-                /** @ignore-option */
+                /**
+                 * Options for a _node_ label text which should follow marker's
+                 * shape.
+                 *
+                 * **Note:** Only SVG-based renderer supports this option.
+                 *
+                 * @extends   plotOptions.series.dataLabels.textPath
+                 * @apioption plotOptions.packedBubble.dataLabels.textPath
+                 */
                 padding: 0
             },
             /**
@@ -7628,8 +7595,12 @@
             pointArrayMap: ['value'],
             pointValKey: 'value',
             isCartesian: false,
+            requireSorting: false,
+            directTouch: true,
             axisTypes: [],
             noSharedTooltip: true,
+            // solving #12287
+            searchPoint: H.noop,
             /* eslint-disable no-invalid-this, valid-jsdoc */
             /**
              * Create a single array of all points from all series
@@ -7777,11 +7748,10 @@
             calculateParentRadius: function () {
                 var series = this, bBox, parentPadding = 20, minParentRadius = 20;
                 bBox = series.seriesBox();
-                series.parentNodeRadius =
-                    Math.min(Math.max(Math.sqrt(2 * series.parentNodeMass / Math.PI) + parentPadding, minParentRadius), bBox ?
-                        Math.max(Math.sqrt(Math.pow(bBox.width, 2) +
-                            Math.pow(bBox.height, 2)) / 2 + parentPadding, minParentRadius) :
-                        Math.sqrt(2 * series.parentNodeMass / Math.PI) + parentPadding);
+                series.parentNodeRadius = clamp(Math.sqrt(2 * series.parentNodeMass / Math.PI) + parentPadding, minParentRadius, bBox ?
+                    Math.max(Math.sqrt(Math.pow(bBox.width, 2) +
+                        Math.pow(bBox.height, 2)) / 2 + parentPadding, minParentRadius) :
+                    Math.sqrt(2 * series.parentNodeMass / Math.PI) + parentPadding);
                 if (series.parentNode) {
                     series.parentNode.marker.radius =
                         series.parentNode.radius = series.parentNodeRadius;
@@ -8225,7 +8195,7 @@
                     [minSize, maxSize];
                 (allDataPoints || []).forEach(function (point, i) {
                     value = useSimulation ?
-                        Math.max(Math.min(point[2], zExtremes[1]), zExtremes[0]) :
+                        clamp(point[2], zExtremes[0], zExtremes[1]) :
                         point[2];
                     radius = series.getRadius(zExtremes[0], zExtremes[1], minSize, maxSize, value);
                     if (radius === 0) {
@@ -8589,7 +8559,17 @@
                         var circ;
                         if (chart.polar) {
                             circ = this.yAxis.center;
-                            this.group.clip(chart.renderer.clipCircle(circ[0], circ[1], circ[2] / 2));
+                            if (!this.clipCircle) {
+                                this.clipCircle = chart.renderer.clipCircle(circ[0], circ[1], circ[2] / 2);
+                            }
+                            else {
+                                this.clipCircle.animate({
+                                    x: circ[0],
+                                    y: circ[1],
+                                    r: circ[2] / 2
+                                });
+                            }
+                            this.group.clip(this.clipCircle);
                             this.setClip = H.noop;
                         }
                     }));
@@ -8626,7 +8606,7 @@
                  * @apioption plotOptions.series.connectEnds
                  */
                 if (this.options.connectEnds !== false &&
-                    firstValid !== undefined) {
+                    typeof firstValid !== 'undefined') {
                     this.connectEnds = true; // re-used in splines
                     points.splice(points.length, 0, points[firstValid]);
                     popLastPoint = true;
@@ -8634,7 +8614,7 @@
                 // For area charts, pseudo points are added to the graph, now we
                 // need to translate these
                 points.forEach(function (point) {
-                    if (point.polarPlotY === undefined) {
+                    if (typeof point.polarPlotY === 'undefined') {
                         series.toXY(point);
                     }
                 });

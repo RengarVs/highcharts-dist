@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Money Flow Index indicator for Highstock
  *
@@ -111,15 +111,16 @@
                 // Cause we need to calculate change between two points
                 range = 1, volumeSeries = series.chart.get(params.volumeSeriesID), yValVolume = (volumeSeries && volumeSeries.yData), MFI = [], isUp = false, xData = [], yData = [], positiveMoneyFlow = [], negativeMoneyFlow = [], newTypicalPrice, oldTypicalPrice, rawMoneyFlow, negativeMoneyFlowSum, positiveMoneyFlowSum, moneyFlowRatio, MFIPoint, i;
                 if (!volumeSeries) {
-                    return H.error('Series ' +
+                    H.error('Series ' +
                         params.volumeSeriesID +
                         ' not found! Check `volumeSeriesID`.', true, series.chart);
+                    return;
                 }
                 // MFI requires high low and close values
                 if ((xVal.length <= period) || !isArray(yVal[0]) ||
                     yVal[0].length !== 4 ||
                     !yValVolume) {
-                    return false;
+                    return;
                 }
                 // Calculate first typical price
                 newTypicalPrice = calculateTypicalPrice(yVal[range]);

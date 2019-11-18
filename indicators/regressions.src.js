@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -109,7 +109,7 @@
                  * @type    {number}
                  * @product highstock
                  */
-                xAxisUnit: undefined
+                xAxisUnit: void 0
             },
             tooltip: {
                 valueDecimals: 4
@@ -189,8 +189,9 @@
                 var distance, closestDistance, i;
                 for (i = 1; i < xData.length - 1; i++) {
                     distance = xData[i] - xData[i - 1];
-                    if (distance > 0 && (closestDistance === undefined ||
-                        distance < closestDistance)) {
+                    if (distance > 0 &&
+                        (typeof closestDistance === 'undefined' ||
+                            distance < closestDistance)) {
                         closestDistance = distance;
                     }
                 }

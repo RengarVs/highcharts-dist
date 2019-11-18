@@ -131,10 +131,6 @@ declare module "../highcharts.src" {
          */
         zoomTo(): void;
     }
-    interface PointOptionsObject {
-        pointPadding?: number;
-        value?: (number|null);
-    }
     /**
      * Contains all loaded map data for Highmaps.
      */

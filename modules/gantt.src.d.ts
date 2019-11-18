@@ -19,12 +19,6 @@ declare module "../highcharts.src" {
          */
         x2?: number;
     }
-    interface PointOptionsObject {
-        /**
-         * The ending X value of the range point.
-         */
-        x2?: number;
-    }
     /**
      * Factory function for Gantt charts.
      *

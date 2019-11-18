@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Parabolic SAR Indicator for Highstock
  *
@@ -196,7 +196,7 @@
                 // Set initial acc factor (for every new trend!)
                 initialAccelerationFactor = params.initialAccelerationFactor, PSAR = yVal[0][2], decimals = params.decimals, index = params.index, PSARArr = [], xData = [], yData = [], previousDirection = 1, direction, EPMinusPSAR, accelerationFactorMultiply, newDirection, prevLow, prevPrevLow, prevHigh, prevPrevHigh, newExtremePoint, high, low, ind;
                 if (index >= yVal.length) {
-                    return false;
+                    return;
                 }
                 for (ind = 0; ind < index; ind++) {
                     extremePoint = Math.max(yVal[ind][1], extremePoint);

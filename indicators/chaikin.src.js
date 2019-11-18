@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -95,12 +95,13 @@
                 if (xVal.length <= period &&
                     yValLen &&
                     yVal[0].length !== 4) {
-                    return false;
+                    return;
                 }
                 if (!volumeSeries) {
-                    return H.error('Series ' +
+                    H.error('Series ' +
                         volumeSeriesID +
                         ' not found! Check `volumeSeriesID`.', true, series.chart);
+                    return;
                 }
                 // i = period <-- skip first N-points
                 // Calculate value one-by-one for each period in visible data
@@ -193,7 +194,7 @@
 
         return requiredIndicatorMixin;
     });
-    _registerModule(_modules, 'indicators/chaikin.src.js', [_modules['parts/Globals.js'], _modules['mixins/indicator-required.js']], function (H, requiredIndicatorMixin) {
+    _registerModule(_modules, 'indicators/chaikin.src.js', [_modules['parts/Globals.js'], _modules['parts/Utilities.js'], _modules['mixins/indicator-required.js']], function (H, U, requiredIndicatorMixin) {
         /* *
          *
          *  License: www.highcharts.com/license
@@ -201,7 +202,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var EMA = H.seriesTypes.ema, AD = H.seriesTypes.ad, error = H.error, correctFloat = H.correctFloat, requiredIndicator = requiredIndicatorMixin;
+        var correctFloat = U.correctFloat;
+        var EMA = H.seriesTypes.ema, AD = H.seriesTypes.ad, error = H.error, requiredIndicator = requiredIndicatorMixin;
         /**
          * The Chaikin series type.
          *
@@ -281,7 +283,7 @@
                 if (periods.length !== 2 || periods[1] <= periods[0]) {
                     error('Error: "Chaikin requires two periods. Notice, first ' +
                         'period should be lower than the second one."');
-                    return false;
+                    return;
                 }
                 ADL = AD.prototype.getValues.call(this, series, {
                     volumeSeriesID: params.volumeSeriesID,
@@ -289,7 +291,7 @@
                 });
                 // Check if adl is calculated properly, if not skip
                 if (!ADL) {
-                    return false;
+                    return;
                 }
                 SPE = EMA.prototype.getValues.call(this, ADL, {
                     period: periods[0]
@@ -299,7 +301,7 @@
                 });
                 // Check if ema is calculated properly, if not skip
                 if (!SPE || !LPE) {
-                    return false;
+                    return;
                 }
                 periodsOffset = periods[1] - periods[0];
                 for (i = 0; i < LPE.yData.length; i++) {

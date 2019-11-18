@@ -1,5 +1,5 @@
 /**
- * @license Highcharts Gantt JS v7.2.1 (2019-10-31)
+ * @license Highcharts Gantt JS v7.2.1-modified (2019-11-18)
  *
  * CurrentDateIndicator
  *
@@ -52,6 +52,7 @@
              * @sample gantt/current-date-indicator/object-config
              *         Current date indicator with custom options
              *
+             * @declare   Highcharts.AxisCurrentDateIndicatorOptions
              * @type      {boolean|*}
              * @default   true
              * @extends   xAxis.plotLines
@@ -62,6 +63,9 @@
             currentDateIndicator: true,
             color: '#ccd6eb',
             width: 2,
+            /**
+             * @declare Highcharts.AxisCurrentDateIndicatorLabelOptions
+             */
             label: {
                 /**
                  * Format of the label. This options is passed as the fist argument to
@@ -77,7 +81,11 @@
                     return H.dateFormat(format, value);
                 },
                 rotation: 0,
+                /**
+                 * @type {Highcharts.CSSObject}
+                 */
                 style: {
+                    /** @internal */
                     fontSize: '10px'
                 }
             }

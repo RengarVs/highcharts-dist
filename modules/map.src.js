@@ -1,5 +1,5 @@
 /**
- * @license Highmaps JS v7.2.1 (2019-10-31)
+ * @license Highmaps JS v7.2.1-modified (2019-11-18)
  *
  * Highmaps as a plugin for Highcharts or Highstock.
  *
@@ -82,7 +82,7 @@
         addEvent(Axis, 'afterSetAxisTranslation', function () {
             var chart = this.chart, mapRatio, plotRatio = chart.plotWidth / chart.plotHeight, adjustedAxisLength, xAxis = chart.xAxis[0], padAxis, fixTo, fixDiff, preserveAspectRatio;
             // Check for map-like series
-            if (this.coll === 'yAxis' && xAxis.transA !== undefined) {
+            if (this.coll === 'yAxis' && typeof xAxis.transA !== 'undefined') {
                 this.series.forEach(function (series) {
                     if (series.preserveAspectRatio) {
                         preserveAspectRatio = true;
@@ -180,7 +180,7 @@
                     color = point.options.color ||
                         (point.isNull ?
                             nullColor :
-                            (colorAxis && value !== undefined) ?
+                            (colorAxis && typeof value !== 'undefined') ?
                                 colorAxis.toColor(value, point) :
                                 point.color || series.color);
                     if (color) {
@@ -492,6 +492,7 @@
                  * @sample {highmaps} maps/coloraxis/marker/
                  *         Black marker
                  *
+                 * @declare Highcharts.PointMarkerOptionsObject
                  * @product highcharts highstock highmaps
                  */
                 marker: {
@@ -500,14 +501,13 @@
                      * `false` to disable animation. Defaults to `{ duration: 50 }`.
                      *
                      * @type    {boolean|Highcharts.AnimationOptionsObject}
-                     * @default {"duration": 50}
                      * @product highcharts highstock highmaps
                      */
                     animation: {
-                        /** @ignore */
+                        /** @internal */
                         duration: 50
                     },
-                    /** @ignore */
+                    /** @internal */
                     width: 0.01,
                     /**
                      * The color of the marker.
@@ -528,10 +528,10 @@
                  */
                 labels: {
                     /**
-                     * How to handle overflowing labels on horizontal color axis.
-                     * Can be undefined or "justify". If "justify", labels will not
-                     * render outside the legend area. If there is room to move it,
-                     * it will be aligned to the edge, else it will be removed.
+                     * How to handle overflowing labels on horizontal color axis. If set
+                     * to `"allow"`, it will not be aligned at all. By default it
+                     * `"justify"` labels inside the chart area. If there is room to
+                     * move it, it will be aligned to the edge, else it will be removed.
                      *
                      * @validvalue ["allow", "justify"]
                      * @product    highcharts highstock highmaps
@@ -840,8 +840,8 @@
                         dataClass = dataClasses[i];
                         from = dataClass.from;
                         to = dataClass.to;
-                        if ((from === undefined || value >= from) &&
-                            (to === undefined || value <= to)) {
+                        if ((typeof from === 'undefined' || value >= from) &&
+                            (typeof to === 'undefined' || value <= to)) {
                             color = dataClass.color;
                             if (point) {
                                 point.dataClass = i;
@@ -991,7 +991,7 @@
                         cSeries.minColorValue = cSeries.dataMin;
                         cSeries.maxColorValue = cSeries.dataMax;
                     }
-                    if (cSeries.minColorValue !== undefined) {
+                    if (typeof cSeries.minColorValue !== 'undefined') {
                         this.dataMin =
                             Math.min(this.dataMin, cSeries.minColorValue);
                         this.dataMax =
@@ -1157,24 +1157,24 @@
                 if (!legendItems.length) {
                     this.dataClasses.forEach(function (dataClass, i) {
                         var vis = true, from = dataClass.from, to = dataClass.to;
+                        var numberFormatter = chart.numberFormatter;
                         // Assemble the default name. This can be overridden
                         // by legend.options.labelFormatter
                         name = '';
-                        if (from === undefined) {
+                        if (typeof from === 'undefined') {
                             name = '< ';
                         }
-                        else if (to === undefined) {
+                        else if (typeof to === 'undefined') {
                             name = '> ';
                         }
-                        if (from !== undefined) {
-                            name += H.numberFormat(from, valueDecimals) +
-                                valueSuffix;
+                        if (typeof from !== 'undefined') {
+                            name += numberFormatter(from, valueDecimals) + valueSuffix;
                         }
-                        if (from !== undefined && to !== undefined) {
+                        if (typeof from !== 'undefined' && typeof to !== 'undefined') {
                             name += ' - ';
                         }
-                        if (to !== undefined) {
-                            name += H.numberFormat(to, valueDecimals) + valueSuffix;
+                        if (typeof to !== 'undefined') {
+                            name += numberFormatter(to, valueDecimals) + valueSuffix;
                         }
                         // Add a mock object to the legend items
                         legendItems.push(extend({
@@ -1530,7 +1530,8 @@
             }
             // Add the mousewheel event
             if (pick(options.enableMouseWheelZoom, options.enabled)) {
-                this.unbindMouseWheel = this.unbindMouseWheel || addEvent(chart.container, doc.onmousewheel === undefined ? 'DOMMouseScroll' : 'mousewheel', function (e) {
+                this.unbindMouseWheel = this.unbindMouseWheel || addEvent(chart.container, typeof doc.onmousewheel === 'undefined' ?
+                    'DOMMouseScroll' : 'mousewheel', function (e) {
                     chart.pointer.onContainerMouseWheel(e);
                     // Issue #5011, returning false from non-jQuery event does
                     // not prevent default
@@ -1637,14 +1638,14 @@
                     yAxis.fixTo = [mouseY - yAxis.pos, centerYArg];
                 }
                 // Zoom
-                if (howMuch !== undefined && !zoomOut) {
+                if (typeof howMuch !== 'undefined' && !zoomOut) {
                     xAxis.setExtremes(newExt.x, newExt.x + newExt.width, false);
                     yAxis.setExtremes(newExt.y, newExt.y + newExt.height, false);
                     // Reset zoom
                 }
                 else {
-                    xAxis.setExtremes(undefined, undefined, false);
-                    yAxis.setExtremes(undefined, undefined, false);
+                    xAxis.setExtremes(void 0, void 0, false);
+                    yAxis.setExtremes(void 0, void 0, false);
                 }
                 // Prevent zooming until this one is finished animating
                 /*
@@ -1775,20 +1776,13 @@
         {
             animation: false,
             dataLabels: {
-                /** @ignore-option */
                 crop: false,
-                // eslint-disable-next-line valid-jsdoc
-                /** @ignore-option */
                 formatter: function () {
                     return this.point.value;
                 },
-                /** @ignore-option */
                 inside: true,
-                /** @ignore-option */
                 overflow: false,
-                /** @ignore-option */
                 padding: 0,
-                /** @ignore-option */
                 verticalAlign: 'middle'
             },
             /**
@@ -2089,10 +2083,10 @@
                     this.maxX = Math.max(maxX, pick(this.maxX, -MAX_VALUE));
                     // If no minRange option is set, set the default minimum zooming
                     // range to 5 times the size of the smallest element
-                    if (xAxis && xAxis.options.minRange === undefined) {
+                    if (xAxis && typeof xAxis.options.minRange === 'undefined') {
                         xAxis.minRange = Math.min(5 * minRange, (this.maxX - this.minX) / 5, xAxis.minRange || MAX_VALUE);
                     }
-                    if (yAxis && yAxis.options.minRange === undefined) {
+                    if (yAxis && typeof yAxis.options.minRange === 'undefined') {
                         yAxis.minRange = Math.min(5 * minRange, (this.maxY - this.minY) / 5, yAxis.minRange || MAX_VALUE);
                     }
                 }
@@ -2172,7 +2166,8 @@
                             // Run through pointArrayMap and what's left of the
                             // point data array in parallel, copying over the values
                             for (var j = 0; j < pointArrayMap.length; ++j, ++ix) {
-                                if (pointArrayMap[j] && val[ix] !== undefined) {
+                                if (pointArrayMap[j] &&
+                                    typeof val[ix] !== 'undefined') {
                                     if (pointArrayMap[j].indexOf('.') > 0) {
                                         H.Point.prototype.setNestedProperty(data[i], val[ix], pointArrayMap[j]);
                                     }
@@ -2561,7 +2556,7 @@
             applyOptions: function (options, x) {
                 var series = this.series, point = Point.prototype.applyOptions.call(this, options, x), joinBy = series.joinBy, mapPoint;
                 if (series.mapData) {
-                    mapPoint = point[joinBy[1]] !== undefined &&
+                    mapPoint = typeof point[joinBy[1]] !== 'undefined' &&
                         series.mapMap[point[joinBy[1]]];
                     if (mapPoint) {
                         // This applies only to bubbles
@@ -2941,21 +2936,15 @@
          */
         {
             dataLabels: {
-                /** @ignore-option */
                 crop: false,
-                /** @ignore-option */
                 defer: false,
-                /** @ignore-option */
                 enabled: true,
-                // eslint-disable-next-line valid-jsdoc
-                /** @ignore-option */
                 formatter: function () {
                     return this.point.name;
                 },
-                /** @ignore-option */
                 overflow: false,
-                /** @ignore-option */
                 style: {
+                    /** @internal */
                     color: '#000000'
                 }
             }
@@ -2966,8 +2955,8 @@
             // Point class
         }, {
             applyOptions: function (options, x) {
-                var mergedOptions = (options.lat !== undefined &&
-                    options.lon !== undefined ?
+                var mergedOptions = (typeof options.lat !== 'undefined' &&
+                    typeof options.lon !== 'undefined' ?
                     merge(options, this.series.chart.fromLatLonToPoint(options)) :
                     options);
                 return Point.prototype
@@ -3108,7 +3097,7 @@
         * @type {number}
         */
         var arrayMax = U.arrayMax, arrayMin = U.arrayMin, isNumber = U.isNumber, objectEach = U.objectEach, pick = U.pick;
-        var Series = H.Series, Legend = H.Legend, Chart = H.Chart, addEvent = H.addEvent, wrap = H.wrap, color = H.color, numberFormat = H.numberFormat, merge = H.merge, noop = H.noop, stableSort = H.stableSort, setOptions = H.setOptions;
+        var Series = H.Series, Legend = H.Legend, Chart = H.Chart, addEvent = H.addEvent, wrap = H.wrap, color = H.color, merge = H.merge, noop = H.noop, stableSort = H.stableSort, setOptions = H.setOptions;
         setOptions({
             legend: {
                 /**
@@ -3135,7 +3124,7 @@
                      *
                      * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                      */
-                    borderColor: undefined,
+                    borderColor: void 0,
                     /**
                      * The width of the ranges borders in pixels, can be also
                      * defined for an individual range.
@@ -3151,7 +3140,7 @@
                      *
                      * @type {string}
                      */
-                    className: undefined,
+                    className: void 0,
                     /**
                      * The main color of the bubble legend. Applies to ranges, if
                      * individual color is not defined.
@@ -3163,7 +3152,7 @@
                      *
                      * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                      */
-                    color: undefined,
+                    color: void 0,
                     /**
                      * An additional class name to apply to the bubble legend's
                      * connector graphical elements. This option does not replace
@@ -3174,14 +3163,14 @@
                      *
                      * @type {string}
                      */
-                    connectorClassName: undefined,
+                    connectorClassName: void 0,
                     /**
                      * The color of the connector, can be also defined
                      * for an individual range.
                      *
                      * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                      */
-                    connectorColor: undefined,
+                    connectorColor: void 0,
                     /**
                      * The length of the connectors in pixels. If labels are
                      * centered, the distance is reduced to 0.
@@ -3215,7 +3204,7 @@
                          *
                          * @type {string}
                          */
-                        className: undefined,
+                        className: void 0,
                         /**
                          * Whether to allow data labels to overlap.
                          */
@@ -3242,7 +3231,7 @@
                          *
                          * @type {Highcharts.FormatterCallbackFunction<Highcharts.BubbleLegendFormatterContextObject>}
                          */
-                        formatter: undefined,
+                        formatter: void 0,
                         /**
                          * The alignment of the labels compared to the bubble
                          * legend. Can be one of `left`, `center` or `right`.
@@ -3262,7 +3251,7 @@
                             /** @ignore-option */
                             fontSize: 10,
                             /** @ignore-option */
-                            color: undefined
+                            color: void 0
                         },
                         /**
                          * The x position offset of the label relative to the
@@ -3309,22 +3298,22 @@
                          * Range size value, similar to bubble Z data.
                          * @type {number}
                          */
-                        value: undefined,
+                        value: void 0,
                         /**
                          * The color of the border for individual range.
                          * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                          */
-                        borderColor: undefined,
+                        borderColor: void 0,
                         /**
                          * The color of the bubble for individual range.
                          * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                          */
-                        color: undefined,
+                        color: void 0,
                         /**
                          * The color of the connector for individual range.
                          * @type {Highcharts.ColorString|Highcharts.GradientColorObject|Highcharts.PatternObject}
                          */
-                        connectorColor: undefined
+                        connectorColor: void 0
                     },
                     /**
                      * Whether the bubble legend range value should be represented
@@ -3651,9 +3640,10 @@
              */
             formatLabel: function (range) {
                 var options = this.options, formatter = options.labels.formatter, format = options.labels.format;
+                var numberFormatter = this.chart.numberFormatter;
                 return format ? H.format(format, range) :
                     formatter ? formatter.call(range) :
-                        numberFormat(range.value, 1);
+                        numberFormatter(range.value, 1);
             },
             /**
              * By using default chart 'hideOverlappingLabels' method, hide or show
@@ -3980,7 +3970,7 @@
         /**
          * @typedef {"area"|"width"} Highcharts.BubbleSizeByValue
          */
-        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, extend = U.extend, isNumber = U.isNumber, pick = U.pick, pInt = U.pInt;
+        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, clamp = U.clamp, extend = U.extend, isNumber = U.isNumber, pick = U.pick, pInt = U.pInt;
         var Axis = H.Axis, color = H.color, noop = H.noop, Point = H.Point, Series = H.Series, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
         /**
          * A bubble series is a three dimensional series type where each point renders
@@ -3998,14 +3988,10 @@
          */
         seriesType('bubble', 'scatter', {
             dataLabels: {
-                // eslint-disable-next-line valid-jsdoc
-                /** @ignore-option */
                 formatter: function () {
                     return this.point.z;
                 },
-                /** @ignore-option */
                 inside: true,
-                /** @ignore-option */
                 verticalAlign: 'middle'
             },
             /**
@@ -4356,7 +4342,7 @@
                     }
                     else { // below zThreshold
                         // #1691
-                        point.shapeArgs = point.plotY = point.dlBox = undefined;
+                        point.shapeArgs = point.plotY = point.dlBox = void 0;
                     }
                 }
             },
@@ -4404,9 +4390,9 @@
                         // Find the min and max Z
                         zData = series.zData.filter(isNumber);
                         if (zData.length) { // #1735
-                            zMin = pick(seriesOptions.zMin, Math.min(zMin, Math.max(arrayMin(zData), seriesOptions.displayNegative === false ?
+                            zMin = pick(seriesOptions.zMin, clamp(arrayMin(zData), seriesOptions.displayNegative === false ?
                                 seriesOptions.zThreshold :
-                                -Number.MAX_VALUE)));
+                                -Number.MAX_VALUE, zMin));
                             zMax = pick(seriesOptions.zMax, Math.max(zMax, arrayMax(zData)));
                         }
                     }
@@ -4439,7 +4425,7 @@
                     ['min', 'userMin', pxMin],
                     ['max', 'userMax', pxMax]
                 ].forEach(function (keys) {
-                    if (pick(axis.options[keys[0]], axis[keys[1]]) === undefined) {
+                    if (typeof pick(axis.options[keys[0]], axis[keys[1]]) === 'undefined') {
                         axis[keys[0]] += keys[2] / transA;
                     }
                 });
@@ -4693,8 +4679,8 @@
                 applyOptions: function (options, x) {
                     var point;
                     if (options &&
-                        options.lat !== undefined &&
-                        options.lon !== undefined) {
+                        typeof options.lat !== 'undefined' &&
+                        typeof options.lon !== 'undefined') {
                         point = Point.prototype.applyOptions.call(this, merge(options, this.series.chart.fromLatLonToPoint(options)), x);
                     }
                     else {
@@ -4794,7 +4780,7 @@
         * @name Highcharts.PointOptionsObject#value
         * @type {number|null|undefined}
         */
-        var extend = U.extend, pick = U.pick;
+        var clamp = U.clamp, extend = U.extend, pick = U.pick;
         var colorMapPointMixin = H.colorMapPointMixin, colorMapSeriesMixin = H.colorMapSeriesMixin, LegendSymbolMixin = H.LegendSymbolMixin, merge = H.merge, noop = H.noop, fireEvent = H.fireEvent, Series = H.Series, seriesType = H.seriesType, seriesTypes = H.seriesTypes;
         /**
          * @private
@@ -4894,20 +4880,13 @@
              */
             nullColor: '#f7f7f7',
             dataLabels: {
-                // eslint-disable-next-line valid-jsdoc
-                /** @ignore-option */
                 formatter: function () {
                     return this.point.value;
                 },
-                /** @ignore-option */
                 inside: true,
-                /** @ignore-option */
                 verticalAlign: 'middle',
-                /** @ignore-option */
                 crop: false,
-                /** @ignore-option */
                 overflow: false,
-                /** @ignore-option */
                 padding: 0 // #3837
             },
             /** @ignore-option */
@@ -4960,14 +4939,12 @@
              * @return {void}
              */
             translate: function () {
-                var series = this, options = series.options, xAxis = series.xAxis, yAxis = series.yAxis, seriesPointPadding = options.pointPadding || 0, between = function (x, a, b) {
-                    return Math.min(Math.max(a, x), b);
-                }, pointPlacement = series.pointPlacementToXValue(); // #7860
+                var series = this, options = series.options, xAxis = series.xAxis, yAxis = series.yAxis, seriesPointPadding = options.pointPadding || 0, pointPlacement = series.pointPlacementToXValue(); // #7860
                 series.generatePoints();
                 series.points.forEach(function (point) {
-                    var xPad = (options.colsize || 1) / 2, yPad = (options.rowsize || 1) / 2, x1 = between(Math.round(xAxis.len -
-                        xAxis.translate(point.x - xPad, 0, 1, 0, 1, -pointPlacement)), -xAxis.len, 2 * xAxis.len), x2 = between(Math.round(xAxis.len -
-                        xAxis.translate(point.x + xPad, 0, 1, 0, 1, -pointPlacement)), -xAxis.len, 2 * xAxis.len), y1 = between(Math.round(yAxis.translate(point.y - yPad, 0, 1, 0, 1)), -yAxis.len, 2 * yAxis.len), y2 = between(Math.round(yAxis.translate(point.y + yPad, 0, 1, 0, 1)), -yAxis.len, 2 * yAxis.len), pointPadding = pick(point.pointPadding, seriesPointPadding);
+                    var xPad = (options.colsize || 1) / 2, yPad = (options.rowsize || 1) / 2, x1 = clamp(Math.round(xAxis.len -
+                        xAxis.translate(point.x - xPad, 0, 1, 0, 1, -pointPlacement)), -xAxis.len, 2 * xAxis.len), x2 = clamp(Math.round(xAxis.len -
+                        xAxis.translate(point.x + xPad, 0, 1, 0, 1, -pointPlacement)), -xAxis.len, 2 * xAxis.len), y1 = clamp(Math.round(yAxis.translate(point.y - yPad, 0, 1, 0, 1)), -yAxis.len, 2 * yAxis.len), y2 = clamp(Math.round(yAxis.translate(point.y + yPad, 0, 1, 0, 1)), -yAxis.len, 2 * yAxis.len), pointPadding = pick(point.pointPadding, seriesPointPadding);
                     // Set plotX and plotY for use in K-D-Tree and more
                     point.plotX = point.clientX = (x1 + x2) / 2;
                     point.plotY = (y1 + y2) / 2;
@@ -5276,7 +5253,7 @@
          *         An object with `x` and `y` properties.
          */
         Chart.prototype.transformFromLatLon = function (latLon, transform) {
-            if (win.proj4 === undefined) {
+            if (typeof win.proj4 === 'undefined') {
                 H.error(21, false, this);
                 return {
                     x: 0,
@@ -5321,7 +5298,7 @@
          *         An object with `lat` and `lon` properties.
          */
         Chart.prototype.transformToLatLon = function (point, transform) {
-            if (win.proj4 === undefined) {
+            if (typeof win.proj4 === 'undefined') {
                 H.error(21, false, this);
                 return;
             }

@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v7.2.1-modified (2019-11-18)
  *
  * Exporting module
  *
@@ -311,6 +311,8 @@
         merge(true, defaultOptions.navigation, {
             /**
              * @optionparent navigation.buttonOptions
+             *
+             * @private
              */
             buttonOptions: {
                 theme: {},
@@ -1242,8 +1244,9 @@
                             axis.userOptions.internalKey;
                     }), extremes = axis.getExtremes(), userMin = extremes.userMin, userMax = extremes.userMax;
                     if (axisCopy &&
-                        ((userMin !== undefined && userMin !== axisCopy.min) ||
-                            (userMax !== undefined && userMax !== axisCopy.max))) {
+                        ((typeof userMin !== 'undefined' &&
+                            userMin !== axisCopy.min) || (typeof userMax !== 'undefined' &&
+                            userMax !== axisCopy.max))) {
                         axisCopy.setExtremes(userMin, userMax, true, false);
                     }
                 });
@@ -1394,10 +1397,10 @@
                 if (handleMaxWidth) {
                     resetParams = [
                         chart.options.chart.width,
-                        undefined,
+                        void 0,
                         false
                     ];
-                    chart.setSize(printMaxWidth, undefined, false);
+                    chart.setSize(printMaxWidth, void 0, false);
                 }
                 // hide all body content
                 [].forEach.call(childNodes, function (node, i) {
@@ -1467,7 +1470,11 @@
                             padding: menuPadding + 'px',
                             pointerEvents: 'auto'
                         }, chart.fixedDiv || chart.container);
-                    innerMenu = createElement('div', { className: 'highcharts-menu' }, null, menu);
+                    innerMenu = createElement('ul', { className: 'highcharts-menu' }, {
+                        listStyle: 'none',
+                        margin: 0,
+                        padding: 0
+                    }, menu);
                     // Presentational CSS
                     if (!chart.styledMode) {
                         css(innerMenu, extend({
@@ -1516,7 +1523,7 @@
                                 element = createElement('hr', null, null, innerMenu);
                             }
                             else {
-                                element = createElement('div', {
+                                element = createElement('li', {
                                     className: 'highcharts-menu-item',
                                     onclick: function (e) {
                                         if (e) { // IE7

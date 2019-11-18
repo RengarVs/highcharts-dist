@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v7.2.1-modified (2019-11-18)
  *
  * Support for parallel coordinates in Highcharts
  *
@@ -156,7 +156,7 @@
                 if (!options.legend) {
                     options.legend = {};
                 }
-                if (options.legend.enabled === undefined) {
+                if (typeof options.legend.enabled === 'undefined') {
                     options.legend.enabled = false;
                 }
                 merge(true, options, 
@@ -335,7 +335,7 @@
                         point.clientX = point.plotX;
                         point.plotY = chart.yAxis[i]
                             .translate(point.y, false, true, null, true);
-                        if (lastPlotX !== undefined) {
+                        if (typeof lastPlotX !== 'undefined') {
                             closestPointRangePx = Math.min(closestPointRangePx, Math.abs(point.plotX - lastPlotX));
                         }
                         lastPlotX = point.plotX;
@@ -400,7 +400,7 @@
                  */
                 yAxisOptions.tooltipValueFormat, yAxisOptions.labels.format);
                 if (labelFormat) {
-                    formattedValue = H.format(labelFormat, extend(this, { value: this.y }), chart.time);
+                    formattedValue = H.format(labelFormat, extend(this, { value: this.y }), chart);
                 }
                 else if (yAxis.isDatetimeAxis) {
                     formattedValue = chart.time.dateFormat(chart.time.resolveDTLFormat(yAxisOptions.dateTimeLabelFormats[yAxis.tickPositions.info.unitName]).main, this.y);

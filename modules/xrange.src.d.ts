@@ -16,9 +16,6 @@ declare module "../highcharts.src" {
     interface Point {
         x2?: number;
     }
-    interface PointOptionsObject {
-        x2?: number;
-    }
 }
 export default factory;
 export let Highcharts: typeof _Highcharts;

@@ -1,5 +1,5 @@
 /**
- * @license Highcharts JS v7.2.1 (2019-10-31)
+ * @license Highcharts JS v7.2.1-modified (2019-11-18)
  *
  * 3D features for Highcharts JS
  *
@@ -260,9 +260,9 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var defined = U.defined, extend = U.extend, objectEach = U.objectEach, pick = U.pick;
+        var animObject = U.animObject, defined = U.defined, extend = U.extend, objectEach = U.objectEach, pick = U.pick;
         var cos = Math.cos, PI = Math.PI, sin = Math.sin;
-        var animObject = H.animObject, charts = H.charts, color = H.color, deg2rad = H.deg2rad, merge = H.merge, perspective = H.perspective, SVGElement = H.SVGElement, SVGRenderer = H.SVGRenderer, 
+        var charts = H.charts, color = H.color, deg2rad = H.deg2rad, merge = H.merge, perspective = H.perspective, SVGElement = H.SVGElement, SVGRenderer = H.SVGRenderer, 
         // internal:
         dFactor, element3dMethods, cuboidMethods;
         /*
@@ -509,7 +509,7 @@
                 if (args.shapeArgs || defined(args.x)) {
                     return this.singleSetterForParts('d', null, this.renderer[this.pathType + 'Path'](args.shapeArgs || args));
                 }
-                return SVGElement.prototype.attr.call(this, args, undefined, complete, continueAnimation);
+                return SVGElement.prototype.attr.call(this, args, void 0, complete, continueAnimation);
             },
             animate: function (args, duration, complete) {
                 if (defined(args.x) && defined(args.y)) {
@@ -2319,7 +2319,7 @@
                     for (var j = 0; j < sources.length; j++) {
                         if (typeof sources[j] === 'object') {
                             var val = sources[j][attr];
-                            if (val !== undefined && val !== null) {
+                            if (typeof val !== 'undefined' && val !== null) {
                                 options[attr] = val;
                                 break;
                             }
@@ -3438,7 +3438,7 @@
             if (series.chart.is3d()) {
                 series.data.forEach(function (point) {
                     point.visible = point.options.visible = vis =
-                        vis === undefined ?
+                        typeof vis === 'undefined' ?
                             !pick(series.visible, point.visible) : vis;
                     pointVis = vis ? 'visible' : 'hidden';
                     series.options.data[series.data.indexOf(point)] =
@@ -3458,7 +3458,8 @@
             if (this.chart.is3d() &&
                 this.handle3dGrouping) {
                 var seriesOptions = this.options, grouping = seriesOptions.grouping, stacking = seriesOptions.stacking, reversedStacks = pick(this.yAxis.options.reversedStacks, true), z = 0;
-                if (!(grouping !== undefined && !grouping)) {
+                // @todo grouping === true ?
+                if (!(typeof grouping !== 'undefined' && !grouping)) {
                     var stacks = this.chart.retrieveStacks(stacking), stack = seriesOptions.stack || 0, i; // position within the stack
                     for (i = 0; i < stacks[stack].series.length; i++) {
                         if (stacks[stack].series[i] === this) {
@@ -3769,7 +3770,7 @@
         }, {
             applyOptions: function () {
                 Point.prototype.applyOptions.apply(this, arguments);
-                if (this.z === undefined) {
+                if (typeof this.z === 'undefined') {
                     this.z = 0;
                 }
                 return this;

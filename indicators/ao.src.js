@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -36,8 +36,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var isArray = U.isArray;
-        var correctFloat = H.correctFloat, noop = H.noop;
+        var correctFloat = U.correctFloat, isArray = U.isArray;
+        var noop = H.noop;
         /**
          * The AO series type
          *
@@ -138,7 +138,7 @@
                 if (xVal.length <= longPeriod ||
                     !isArray(yVal[0]) ||
                     yVal[0].length !== 4) {
-                    return false;
+                    return;
                 }
                 for (i = 0; i < longPeriod - 1; i++) {
                     price = (yVal[i][high] + yVal[i][low]) / 2;

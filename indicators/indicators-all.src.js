@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * All technical indicators for Highstock
  *
@@ -163,7 +163,7 @@
              *
              * @type {string}
              */
-            name: undefined,
+            name: void 0,
             tooltip: {
                 /**
                  * Number of decimals in indicator series.
@@ -176,7 +176,7 @@
              *
              * @type {string}
              */
-            linkedTo: undefined,
+            linkedTo: void 0,
             /**
              * Whether to compare indicator to the main series values
              * or indicator values.
@@ -352,7 +352,7 @@
             getValues: function (series, params) {
                 var period = params.period, xVal = series.xData, yVal = series.yData, yValLen = yVal.length, range = 0, sum = 0, SMA = [], xData = [], yData = [], index = -1, i, SMAPoint;
                 if (xVal.length < period) {
-                    return false;
+                    return;
                 }
                 // Switch index for OHLC / Candlestick / Arearange
                 if (isArray(yVal[0])) {
@@ -468,12 +468,13 @@
                 if (xVal.length <= period &&
                     yValLen &&
                     yVal[0].length !== 4) {
-                    return false;
+                    return;
                 }
                 if (!volumeSeries) {
-                    return H.error('Series ' +
+                    H.error('Series ' +
                         volumeSeriesID +
                         ' not found! Check `volumeSeriesID`.', true, series.chart);
+                    return;
                 }
                 // i = period <-- skip first N-points
                 // Calculate value one-by-one for each period in visible data
@@ -517,8 +518,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var isArray = U.isArray;
-        var correctFloat = H.correctFloat, noop = H.noop;
+        var correctFloat = U.correctFloat, isArray = U.isArray;
+        var noop = H.noop;
         /**
          * The AO series type
          *
@@ -619,7 +620,7 @@
                 if (xVal.length <= longPeriod ||
                     !isArray(yVal[0]) ||
                     yVal[0].length !== 4) {
-                    return false;
+                    return;
                 }
                 for (i = 0; i < longPeriod - 1; i++) {
                     price = (yVal[i][high] + yVal[i][low]) / 2;
@@ -937,7 +938,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             dataGrouping: {
@@ -1184,7 +1185,7 @@
                 if ((xVal.length <= period) ||
                     !isArray(yVal[0]) ||
                     yVal[0].length !== 4) {
-                    return false;
+                    return;
                 }
                 for (i = 1; i <= yValLen; i++) {
                     accumulateAverage(points, xVal, yVal, i);
@@ -1306,7 +1307,7 @@
                      *
                      * @type  {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -1320,7 +1321,7 @@
                     /**
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             tooltip: {
@@ -1364,7 +1365,7 @@
                 // middle line, top line and bottom line
                 ML, TL, BL, date, xData = [], yData = [], slicedX, slicedY, stdDev, isOHLC, point, i;
                 if (xVal.length < period) {
-                    return false;
+                    return;
                 }
                 isOHLC = isArray(yVal[0]);
                 for (i = period; i <= yValLen; i++) {
@@ -1474,7 +1475,7 @@
                 if (xVal.length <= period ||
                     !isArray(yVal[0]) ||
                     yVal[0].length !== 4) {
-                    return false;
+                    return;
                 }
                 // accumulate first N-points
                 while (range < period) {
@@ -1608,7 +1609,7 @@
              */
             getValues: function (series, params) {
                 if (!this.isValid()) {
-                    return false;
+                    return;
                 }
                 return this.getMoneyFlow(series.xData, series.yData, this.volumeSeries.yData, params.period);
             },
@@ -1709,8 +1710,7 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var pick = U.pick;
-        var correctFloat = H.correctFloat;
+        var correctFloat = U.correctFloat, pick = U.pick;
         /* eslint-disable valid-jsdoc */
         // Utils
         /**
@@ -1774,7 +1774,7 @@
                 // 0- date, 1- Detrended Price Oscillator
                 DPO = [], xData = [], yData = [], sum = 0, oscillator, periodIndex, rangeIndex, price, i, j;
                 if (xVal.length <= range) {
-                    return false;
+                    return;
                 }
                 // Accumulate first N-points for SMA
                 for (i = 0; i < period - 1; i++) {
@@ -1827,8 +1827,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var isArray = U.isArray;
-        var seriesType = H.seriesType, correctFloat = H.correctFloat;
+        var correctFloat = U.correctFloat, isArray = U.isArray;
+        var seriesType = H.seriesType;
         /**
          * The EMA series type.
          *
@@ -1885,7 +1885,7 @@
                 var x = xVal[i - 1], yValue = index < 0 ?
                     yVal[i - 1] :
                     yVal[i - 1][index], y;
-                y = calEMA === undefined ?
+                y = typeof calEMA === 'undefined' ?
                     SMA : correctFloat((yValue * EMApercent) +
                     (calEMA * (1 - EMApercent)));
                 return [x, y];
@@ -1894,7 +1894,7 @@
                 var period = params.period, xVal = series.xData, yVal = series.yData, yValLen = yVal ? yVal.length : 0, EMApercent = 2 / (period + 1), sum = 0, EMA = [], xData = [], yData = [], index = -1, SMA = 0, calEMA, EMAPoint, i;
                 // Check period, if bigger than points length, skip
                 if (yValLen < period) {
-                    return false;
+                    return;
                 }
                 // Switch index for OHLC / Candlestick / Arearange
                 if (isArray(yVal[0])) {
@@ -1934,7 +1934,7 @@
         ''; // adds doclet above to the transpiled file
 
     });
-    _registerModule(_modules, 'indicators/chaikin.src.js', [_modules['parts/Globals.js'], _modules['mixins/indicator-required.js']], function (H, requiredIndicatorMixin) {
+    _registerModule(_modules, 'indicators/chaikin.src.js', [_modules['parts/Globals.js'], _modules['parts/Utilities.js'], _modules['mixins/indicator-required.js']], function (H, U, requiredIndicatorMixin) {
         /* *
          *
          *  License: www.highcharts.com/license
@@ -1942,7 +1942,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var EMA = H.seriesTypes.ema, AD = H.seriesTypes.ad, error = H.error, correctFloat = H.correctFloat, requiredIndicator = requiredIndicatorMixin;
+        var correctFloat = U.correctFloat;
+        var EMA = H.seriesTypes.ema, AD = H.seriesTypes.ad, error = H.error, requiredIndicator = requiredIndicatorMixin;
         /**
          * The Chaikin series type.
          *
@@ -2022,7 +2023,7 @@
                 if (periods.length !== 2 || periods[1] <= periods[0]) {
                     error('Error: "Chaikin requires two periods. Notice, first ' +
                         'period should be lower than the second one."');
-                    return false;
+                    return;
                 }
                 ADL = AD.prototype.getValues.call(this, series, {
                     volumeSeriesID: params.volumeSeriesID,
@@ -2030,7 +2031,7 @@
                 });
                 // Check if adl is calculated properly, if not skip
                 if (!ADL) {
-                    return false;
+                    return;
                 }
                 SPE = EMA.prototype.getValues.call(this, ADL, {
                     period: periods[0]
@@ -2040,7 +2041,7 @@
                 });
                 // Check if ema is calculated properly, if not skip
                 if (!SPE || !LPE) {
-                    return false;
+                    return;
                 }
                 periodsOffset = periods[1] - periods[0];
                 for (i = 0; i < LPE.yData.length; i++) {
@@ -2083,8 +2084,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var isArray = U.isArray;
-        var EMAindicator = H.seriesTypes.ema, requiredIndicator = requiredIndicatorMixin, correctFloat = H.correctFloat;
+        var correctFloat = U.correctFloat, isArray = U.isArray;
+        var EMAindicator = H.seriesTypes.ema, requiredIndicator = requiredIndicatorMixin;
         /**
          * The DEMA series Type
          *
@@ -2128,7 +2129,7 @@
                 });
             },
             getEMA: function (yVal, prevEMA, SMA, index, i, xVal) {
-                return EMAindicator.prototype.calculateEma(xVal || [], yVal, i === undefined ? 1 : i, this.chart.series[0].EMApercent, prevEMA, index === undefined ? -1 : index, SMA);
+                return EMAindicator.prototype.calculateEma(xVal || [], yVal, typeof i === 'undefined' ? 1 : i, this.chart.series[0].EMApercent, prevEMA, typeof index === 'undefined' ? -1 : index, SMA);
             },
             getValues: function (series, params) {
                 var period = params.period, doubledPeriod = 2 * period, xVal = series.xData, yVal = series.yData, yValLen = yVal ? yVal.length : 0, index = -1, accumulatePeriodPoints = 0, SMA = 0, DEMA = [], xDataDema = [], yDataDema = [], EMA = 0, 
@@ -2141,7 +2142,7 @@
                 series.EMApercent = (2 / (period + 1));
                 // Check period, if bigger than EMA points length, skip
                 if (yValLen < 2 * period - 1) {
-                    return false;
+                    return;
                 }
                 // Switch index for OHLC / Candlestick / Arearange
                 if (isArray(yVal[0])) {
@@ -2215,8 +2216,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var isArray = U.isArray;
-        var EMAindicator = H.seriesTypes.ema, requiredIndicator = requiredIndicatorMixin, correctFloat = H.correctFloat;
+        var correctFloat = U.correctFloat, isArray = U.isArray;
+        var EMAindicator = H.seriesTypes.ema, requiredIndicator = requiredIndicatorMixin;
         /**
          * The TEMA series type.
          *
@@ -2260,7 +2261,7 @@
                 });
             },
             getEMA: function (yVal, prevEMA, SMA, index, i, xVal) {
-                return EMAindicator.prototype.calculateEma(xVal || [], yVal, i === undefined ? 1 : i, this.chart.series[0].EMApercent, prevEMA, index === undefined ? -1 : index, SMA);
+                return EMAindicator.prototype.calculateEma(xVal || [], yVal, typeof i === 'undefined' ? 1 : i, this.chart.series[0].EMApercent, prevEMA, typeof index === 'undefined' ? -1 : index, SMA);
             },
             getTemaPoint: function (xVal, tripledPeriod, EMAlevels, i) {
                 var TEMAPoint = [
@@ -2284,7 +2285,7 @@
                 series.EMApercent = (2 / (period + 1));
                 // Check period, if bigger than EMA points length, skip
                 if (yValLen < 3 * period - 2) {
-                    return false;
+                    return;
                 }
                 // Switch index for OHLC / Candlestick / Arearange
                 if (isArray(yVal[0])) {
@@ -2373,7 +2374,7 @@
         ''; // to include the above in the js output
 
     });
-    _registerModule(_modules, 'indicators/trix.src.js', [_modules['parts/Globals.js'], _modules['mixins/indicator-required.js']], function (H, requiredIndicator) {
+    _registerModule(_modules, 'indicators/trix.src.js', [_modules['parts/Globals.js'], _modules['parts/Utilities.js'], _modules['mixins/indicator-required.js']], function (H, U, requiredIndicator) {
         /* *
          *
          *  License: www.highcharts.com/license
@@ -2381,7 +2382,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var correctFloat = H.correctFloat, TEMA = H.seriesTypes.tema;
+        var correctFloat = U.correctFloat;
+        var TEMA = H.seriesTypes.tema;
         /**
          * The TRIX series type.
          *
@@ -2532,7 +2534,7 @@
                 if (periods.length !== 2 || periods[1] <= periods[0]) {
                     error('Error: "APO requires two periods. Notice, first period ' +
                         'should be lower than the second one."');
-                    return false;
+                    return;
                 }
                 SPE = EMA.prototype.getValues.call(this, series, {
                     index: index,
@@ -2544,7 +2546,7 @@
                 });
                 // Check if ema is calculated properly, if not skip
                 if (!SPE || !LPE) {
-                    return false;
+                    return;
                 }
                 periodsOffset = periods[1] - periods[0];
                 for (i = 0; i < LPE.yData.length; i++) {
@@ -2667,11 +2669,11 @@
             var ret = [], isEmptyRange;
             [].forEach.call(arguments, function (arr, i) {
                 ret.push(H.approximations.average(arr));
-                isEmptyRange = !isEmptyRange && ret[i] === undefined;
+                isEmptyRange = !isEmptyRange && typeof ret[i] === 'undefined';
             });
             // Return undefined when first elem. is undefined and let
             // sum method handle null (#7377)
-            return isEmptyRange ? undefined : ret;
+            return isEmptyRange ? void 0 : ret;
         };
         /* eslint-enable require-jsdoc */
         /**
@@ -2739,7 +2741,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -2756,7 +2758,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -2773,7 +2775,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -2790,7 +2792,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -2807,7 +2809,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -3144,7 +3146,7 @@
                 if (xVal.length <= period ||
                     !isArray(yVal[0]) ||
                     yVal[0].length !== 4) {
-                    return false;
+                    return;
                 }
                 // Add timestamps at the beginning
                 dateStart = xVal[0] - (period * closestPointRange);
@@ -3218,7 +3220,7 @@
         ''; // add doclet above to transpiled file
 
     });
-    _registerModule(_modules, 'indicators/keltner-channels.src.js', [_modules['parts/Globals.js'], _modules['mixins/multipe-lines.js']], function (H, multipleLinesMixin) {
+    _registerModule(_modules, 'indicators/keltner-channels.src.js', [_modules['parts/Globals.js'], _modules['parts/Utilities.js'], _modules['mixins/multipe-lines.js']], function (H, U, multipleLinesMixin) {
         /* *
          *
          *  License: www.highcharts.com/license
@@ -3226,7 +3228,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var SMA = H.seriesTypes.sma, EMA = H.seriesTypes.ema, ATR = H.seriesTypes.atr, merge = H.merge, correctFloat = H.correctFloat;
+        var correctFloat = U.correctFloat;
+        var SMA = H.seriesTypes.sma, EMA = H.seriesTypes.ema, ATR = H.seriesTypes.atr, merge = H.merge;
         /**
          * The Keltner Channels series type.
          *
@@ -3286,7 +3289,7 @@
                      * Color of the line. If not set, it's inherited from
                      * `plotOptions.keltnerchannels.color`
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -3297,7 +3300,7 @@
             topLine: {
                 styles: {
                     lineWidth: 1,
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             tooltip: {
@@ -3350,7 +3353,7 @@
                     period: periodATR
                 }), pointEMA, pointATR, xData = [], yData = [], i;
                 if (yValLen < period) {
-                    return false;
+                    return;
                 }
                 for (i = period; i <= yValLen; i++) {
                     pointEMA = seriesEMA.values[i - period];
@@ -3396,8 +3399,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var defined = U.defined;
-        var seriesType = H.seriesType, noop = H.noop, merge = H.merge, SMA = H.seriesTypes.sma, EMA = H.seriesTypes.ema, correctFloat = H.correctFloat;
+        var correctFloat = U.correctFloat, defined = U.defined;
+        var seriesType = H.seriesType, noop = H.noop, merge = H.merge, SMA = H.seriesTypes.sma, EMA = H.seriesTypes.ema;
         /**
          * The MACD series type.
          *
@@ -3460,7 +3463,7 @@
                      *
                      * @type  {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -3484,7 +3487,7 @@
                      *
                      * @type  {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             threshold: 0,
@@ -3652,7 +3655,7 @@
                 var j = 0, MACD = [], xMACD = [], yMACD = [], signalLine = [], shortEMA, longEMA, i;
                 if (series.xData.length <
                     params.longPeriod + params.signalPeriod) {
-                    return false;
+                    return;
                 }
                 // Calculating the short and long EMA used when calculating the MACD
                 shortEMA = EMA.prototype.getValues(series, {
@@ -3697,7 +3700,8 @@
                 // Setting the MACD Histogram. In comparison to the loop with pure
                 // MACD this loop uses MACD x value not xData.
                 for (i = 0; i < MACD.length; i++) {
-                    if (MACD[i][0] >= signalLine[0][0]) { // detect the first point
+                    // detect the first point
+                    if (MACD[i][0] >= signalLine[0][0]) {
                         MACD[i][2] = signalLine[j][1];
                         yMACD[i] = [0, signalLine[j][1], MACD[i][3]];
                         if (MACD[i][3] === null) {
@@ -3818,15 +3822,16 @@
                 // Cause we need to calculate change between two points
                 range = 1, volumeSeries = series.chart.get(params.volumeSeriesID), yValVolume = (volumeSeries && volumeSeries.yData), MFI = [], isUp = false, xData = [], yData = [], positiveMoneyFlow = [], negativeMoneyFlow = [], newTypicalPrice, oldTypicalPrice, rawMoneyFlow, negativeMoneyFlowSum, positiveMoneyFlowSum, moneyFlowRatio, MFIPoint, i;
                 if (!volumeSeries) {
-                    return H.error('Series ' +
+                    H.error('Series ' +
                         params.volumeSeriesID +
                         ' not found! Check `volumeSeriesID`.', true, series.chart);
+                    return;
                 }
                 // MFI requires high low and close values
                 if ((xVal.length <= period) || !isArray(yVal[0]) ||
                     yVal[0].length !== 4 ||
                     !yValVolume) {
-                    return false;
+                    return;
                 }
                 // Calculate first typical price
                 newTypicalPrice = calculateTypicalPrice(yVal[range]);
@@ -3942,14 +3947,14 @@
             getValues: function (series, params) {
                 var period = params.period, xVal = series.xData, yVal = series.yData, yValLen = yVal ? yVal.length : 0, xValue = xVal[0], yValue = yVal[0], MM = [], xData = [], yData = [], index, i, points, MMPoint;
                 if (xVal.length <= period) {
-                    return false;
+                    return;
                 }
                 // Switch index for OHLC / Candlestick / Arearange
                 if (isArray(yVal[0])) {
                     yValue = yVal[0][3];
                 }
                 else {
-                    return false;
+                    return;
                 }
                 // Starting point
                 points = [
@@ -4033,9 +4038,12 @@
         {
             requiredIndicators: ['atr'],
             getValues: function (series, params) {
-                var atrData = ATR.prototype.getValues.apply(this, arguments), atrLength = atrData.values.length, period = params.period - 1, yVal = series.yData, i = 0;
+                var atrData = (ATR.prototype.getValues.apply(this, arguments)), atrLength = atrData.values.length, period = params.period - 1, yVal = series.yData, i = 0;
+                if (!atrData) {
+                    return;
+                }
                 for (; i < atrLength; i++) {
-                    atrData.yData[i] = atrData.values[i][1] / yVal[period][3] * 100;
+                    atrData.yData[i] = (atrData.values[i][1] / yVal[period][3] * 100);
                     atrData.values[i][1] = atrData.yData[i];
                     period++;
                 }
@@ -4126,9 +4134,7 @@
             },
             enableMouseTracking: false,
             dataLabels: {
-                /** @ignore-option */
                 enabled: true,
-                /** @ignore-option */
                 format: '{point.pivotLine}'
             },
             dataGrouping: {
@@ -4240,7 +4246,7 @@
                 if (xVal.length < period ||
                     !isArray(yVal[0]) ||
                     yVal[0].length !== 4) {
-                    return false;
+                    return;
                 }
                 for (i = period + 1; i <= yValLen + period; i += period) {
                     slicedX = xVal.slice(i - period - 1, i);
@@ -4347,7 +4353,7 @@
         ''; // to include the above in the js output'
 
     });
-    _registerModule(_modules, 'indicators/ppo.src.js', [_modules['parts/Globals.js'], _modules['mixins/indicator-required.js']], function (H, requiredIndicatorMixin) {
+    _registerModule(_modules, 'indicators/ppo.src.js', [_modules['parts/Globals.js'], _modules['parts/Utilities.js'], _modules['mixins/indicator-required.js']], function (H, U, requiredIndicatorMixin) {
         /* *
          *
          *  License: www.highcharts.com/license
@@ -4355,7 +4361,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var EMA = H.seriesTypes.ema, error = H.error, correctFloat = H.correctFloat, requiredIndicator = requiredIndicatorMixin;
+        var correctFloat = U.correctFloat;
+        var EMA = H.seriesTypes.ema, error = H.error, requiredIndicator = requiredIndicatorMixin;
         /**
          * The PPO series type.
          *
@@ -4427,7 +4434,7 @@
                 if (periods.length !== 2 || periods[1] <= periods[0]) {
                     error('Error: "PPO requires two periods. Notice, first period ' +
                         'should be lower than the second one."');
-                    return false;
+                    return;
                 }
                 SPE = EMA.prototype.getValues.call(this, series, {
                     index: index,
@@ -4439,7 +4446,7 @@
                 });
                 // Check if ema is calculated properly, if not skip
                 if (!SPE || !LPE) {
-                    return false;
+                    return;
                 }
                 periodsOffset = periods[1] - periods[0];
                 for (i = 0; i < LPE.yData.length; i++) {
@@ -4627,7 +4634,7 @@
                 // middle line, top line and bottom line
                 ML, TL, BL, date, low = 2, high = 1, xData = [], yData = [], slicedY, extremes, i;
                 if (yValLen < period) {
-                    return false;
+                    return;
                 }
                 for (i = period; i <= yValLen; i++) {
                     date = xVal[i - 1];
@@ -4736,7 +4743,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             /**
@@ -4839,7 +4846,7 @@
                 if (xVal.length < period ||
                     !isArray(yVal[0]) ||
                     yVal[0].length !== 4) {
-                    return false;
+                    return;
                 }
                 for (i = period; i <= yValLen; i++) {
                     slicedX = xVal.slice(i - period, i);
@@ -5046,7 +5053,7 @@
                 // Set initial acc factor (for every new trend!)
                 initialAccelerationFactor = params.initialAccelerationFactor, PSAR = yVal[0][2], decimals = params.decimals, index = params.index, PSARArr = [], xData = [], yData = [], previousDirection = 1, direction, EPMinusPSAR, accelerationFactorMultiply, newDirection, prevLow, prevPrevLow, prevHigh, prevPrevHigh, newExtremePoint, high, low, ind;
                 if (index >= yVal.length) {
-                    return false;
+                    return;
                 }
                 for (ind = 0; ind < index; ind++) {
                     extremePoint = Math.max(yVal[ind][1], extremePoint);
@@ -5196,7 +5203,7 @@
                 // Period is used as a number of time periods ago, so we need more
                 // (at least 1 more) data than the period value
                 if (xVal.length <= period) {
-                    return false;
+                    return;
                 }
                 // Switch index for OHLC / Candlestick / Arearange
                 if (isArray(yVal[0])) {
@@ -5307,7 +5314,7 @@
                 // RSI requires close value
                 if ((xVal.length < period) || !isArray(yVal[0]) ||
                     yVal[0].length !== 4) {
-                    return false;
+                    return;
                 }
                 // Calculate changes for first N points
                 while (range < period) {
@@ -5450,7 +5457,7 @@
                      *
                      * @type {Highcharts.ColorString}
                      */
-                    lineColor: undefined
+                    lineColor: void 0
                 }
             },
             dataGrouping: {
@@ -5486,7 +5493,7 @@
                 if (yValLen < periodK ||
                     !isArray(yVal[0]) ||
                     yVal[0].length !== 4) {
-                    return false;
+                    return;
                 }
                 // For a N-period, we start from N-1 point, to calculate Nth point
                 // That is why we later need to comprehend slice() elements list
@@ -5546,8 +5553,9 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
+        var correctFloat = U.correctFloat;
         var isArray = U.isArray, objectEach = U.objectEach;
-        var ATR = H.seriesTypes.atr, SMA = H.seriesTypes.sma, merge = H.merge, correctFloat = H.correctFloat;
+        var ATR = H.seriesTypes.atr, SMA = H.seriesTypes.sma, merge = H.merge;
         /* eslint-disable require-jsdoc */
         // Utils:
         function createPointObj(mainSeries, index, close) {
@@ -5899,7 +5907,7 @@
                 prevY, y, i;
                 if ((xVal.length <= period) || !isArray(yVal[0]) ||
                     yVal[0].length !== 4 || period < 0) {
-                    return false;
+                    return;
                 }
                 ATRData = ATR.prototype.getValues.call(this, series, {
                     period: period
@@ -5978,7 +5986,7 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var arrayMax = U.arrayMax, arrayMin = U.arrayMin, extend = U.extend, isArray = U.isArray;
+        var animObject = U.animObject, arrayMax = U.arrayMax, arrayMin = U.arrayMin, correctFloat = U.correctFloat, extend = U.extend, isArray = U.isArray;
         /* eslint-disable require-jsdoc */
         // Utils
         function arrayExtremesOHLC(data) {
@@ -5998,7 +6006,7 @@
             };
         }
         /* eslint-enable require-jsdoc */
-        var abs = Math.abs, noop = H.noop, addEvent = H.addEvent, correctFloat = H.correctFloat, seriesType = H.seriesType, columnPrototype = H.seriesTypes.column.prototype;
+        var abs = Math.abs, noop = H.noop, addEvent = H.addEvent, seriesType = H.seriesType, columnPrototype = H.seriesTypes.column.prototype;
         /**
          * The Volume By Price (VBP) series type.
          *
@@ -6096,19 +6104,14 @@
                 enabled: false
             },
             dataLabels: {
-                /** @ignore-option */
                 allowOverlap: true,
-                /** @ignore-option */
                 enabled: true,
-                /** @ignore-option */
                 format: 'P: {point.volumePos:.2f} | N: {point.volumeNeg:.2f}',
-                /** @ignore-option */
                 padding: 0,
-                /** @ignore-option */
                 style: {
+                    /** @internal */
                     fontSize: '7px'
                 },
-                /** @ignore-option */
                 verticalAlign: 'top'
             }
         }, 
@@ -6168,7 +6171,7 @@
                 var series = this, attr = {};
                 if (H.svg && !init) {
                     attr.translateX = series.yAxis.pos;
-                    series.group.animate(attr, extend(H.animObject(series.options.animation), {
+                    series.group.animate(attr, extend(animObject(series.options.animation), {
                         step: function (val, fx) {
                             series.group.attr({
                                 scaleX: Math.max(0.001, fx.pos)
@@ -6277,21 +6280,24 @@
                 var indicator = this, xValues = series.processedXData, yValues = series.processedYData, chart = indicator.chart, ranges = params.ranges, VBP = [], xData = [], yData = [], isOHLC, volumeSeries, priceZones;
                 // Checks if base series exists
                 if (!series.chart) {
-                    return H.error('Base series not found! In case it has been removed, add ' +
+                    H.error('Base series not found! In case it has been removed, add ' +
                         'a new one.', true, chart);
+                    return;
                 }
                 // Checks if volume series exists
                 if (!(volumeSeries = (chart.get(params.volumeSeriesID)))) {
-                    return H.error('Series ' +
+                    H.error('Series ' +
                         params.volumeSeriesID +
                         ' not found! Check `volumeSeriesID`.', true, chart);
+                    return;
                 }
                 // Checks if series data fits the OHLC format
                 isOHLC = isArray(yValues[0]);
                 if (isOHLC && yValues[0].length !== 4) {
-                    return H.error('Type of ' +
+                    H.error('Type of ' +
                         series.name +
                         ' series is different than line, OHLC or candlestick.', true, chart);
+                    return;
                 }
                 // Price zones contains all the information about the zones (index,
                 // start, end, volumes, etc.)
@@ -6527,9 +6533,10 @@
                 var indicator = this, chart = series.chart, xValues = series.xData, yValues = series.yData, period = params.period, isOHLC = true, volumeSeries;
                 // Checks if volume series exists
                 if (!(volumeSeries = (chart.get(params.volumeSeriesID)))) {
-                    return H.error('Series ' +
+                    H.error('Series ' +
                         params.volumeSeriesID +
                         ' not found! Check `volumeSeriesID`.', true, chart);
+                    return;
                 }
                 // Checks if series data fits the OHLC format
                 if (!(isArray(yValues[0]))) {
@@ -6669,7 +6676,7 @@
                 if (xVal.length < period ||
                     !isArray(yVal[0]) ||
                     yVal[0].length !== 4) {
-                    return false;
+                    return;
                 }
                 // For a N-period, we start from N-1 point, to calculate Nth point
                 // That is why we later need to comprehend slice() elements list
@@ -6791,7 +6798,7 @@
             getValues: function (series, params) {
                 var period = params.period, xVal = series.xData, yVal = series.yData, yValLen = yVal ? yVal.length : 0, range = 1, xValue = xVal[0], yValue = yVal[0], WMA = [], xData = [], yData = [], index = -1, i, points, WMAPoint;
                 if (xVal.length < period) {
-                    return false;
+                    return;
                 }
                 // Switch index for OHLC / Candlestick
                 if (isArray(yVal[0])) {
@@ -6918,11 +6925,11 @@
                     'high': 1 - deviation
                 }, xVal = series.xData, yVal = series.yData, yValLen = yVal ? yVal.length : 0, zigzag = [], xData = [], yData = [], i, j, zigzagPoint, firstZigzagLow, firstZigzagHigh, directionUp, zigzagLen, exitLoop = false, yIndex = false;
                 // Exit if not enught points or no low or high values
-                if (xVal.length <= 1 ||
+                if (!xVal || xVal.length <= 1 ||
                     (yValLen &&
                         (yVal[0][lowIndex] === UNDEFINED ||
                             yVal[0][highIndex] === UNDEFINED))) {
-                    return false;
+                    return;
                 }
                 // Set first zigzag point candidate
                 firstZigzagLow = yVal[0][lowIndex];
@@ -7102,7 +7109,7 @@
                  * @type    {number}
                  * @product highstock
                  */
-                xAxisUnit: undefined
+                xAxisUnit: void 0
             },
             tooltip: {
                 valueDecimals: 4
@@ -7182,8 +7189,9 @@
                 var distance, closestDistance, i;
                 for (i = 1; i < xData.length - 1; i++) {
                     distance = xData[i] - xData[i - 1];
-                    if (distance > 0 && (closestDistance === undefined ||
-                        distance < closestDistance)) {
+                    if (distance > 0 &&
+                        (typeof closestDistance === 'undefined' ||
+                            distance < closestDistance)) {
                         closestDistance = distance;
                     }
                 }
@@ -7397,7 +7405,7 @@
         ''; // to include the above in the js output
 
     });
-    _registerModule(_modules, 'indicators/acceleration-bands.src.js', [_modules['parts/Globals.js'], _modules['mixins/multipe-lines.js']], function (H, multipleLinesMixin) {
+    _registerModule(_modules, 'indicators/acceleration-bands.src.js', [_modules['parts/Globals.js'], _modules['parts/Utilities.js'], _modules['mixins/multipe-lines.js']], function (H, U, multipleLinesMixin) {
         /* *
          *
          *  License: www.highcharts.com/license
@@ -7405,7 +7413,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var SMA = H.seriesTypes.sma, merge = H.merge, correctFloat = H.correctFloat;
+        var correctFloat = U.correctFloat;
+        var SMA = H.seriesTypes.sma, merge = H.merge;
         /* eslint-disable valid-jsdoc */
         /**
          * @private
@@ -7510,7 +7519,7 @@
                 // middle line, top line and bottom line
                 ML, TL, BL, date, bandBase, pointSMA, ubSMA, lbSMA, low = 2, high = 1, xData = [], yData = [], slicedX, slicedY, i;
                 if (yValLen < period) {
-                    return false;
+                    return;
                 }
                 for (i = 0; i <= yValLen; i++) {
                     // Get UB and LB values of every point. This condition

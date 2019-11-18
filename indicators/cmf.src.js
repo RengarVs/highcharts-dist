@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * (c) 2010-2019 Highsoft AS
  * Author: Sebastian Domas
@@ -119,7 +119,7 @@
              */
             getValues: function (series, params) {
                 if (!this.isValid()) {
-                    return false;
+                    return;
                 }
                 return this.getMoneyFlow(series.xData, series.yData, this.volumeSeries.yData, params.period);
             },

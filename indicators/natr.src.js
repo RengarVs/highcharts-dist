@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -73,9 +73,12 @@
         {
             requiredIndicators: ['atr'],
             getValues: function (series, params) {
-                var atrData = ATR.prototype.getValues.apply(this, arguments), atrLength = atrData.values.length, period = params.period - 1, yVal = series.yData, i = 0;
+                var atrData = (ATR.prototype.getValues.apply(this, arguments)), atrLength = atrData.values.length, period = params.period - 1, yVal = series.yData, i = 0;
+                if (!atrData) {
+                    return;
+                }
                 for (; i < atrLength; i++) {
-                    atrData.yData[i] = atrData.values[i][1] / yVal[period][3] * 100;
+                    atrData.yData[i] = (atrData.values[i][1] / yVal[period][3] * 100);
                     atrData.values[i][1] = atrData.yData[i];
                     period++;
                 }

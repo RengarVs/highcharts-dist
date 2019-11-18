@@ -1,5 +1,5 @@
 /**
- * @license Highstock JS v7.2.1 (2019-10-31)
+ * @license Highstock JS v7.2.1-modified (2019-11-18)
  *
  * Indicator series type for Highstock
  *
@@ -85,7 +85,7 @@
 
         return requiredIndicatorMixin;
     });
-    _registerModule(_modules, 'indicators/ppo.src.js', [_modules['parts/Globals.js'], _modules['mixins/indicator-required.js']], function (H, requiredIndicatorMixin) {
+    _registerModule(_modules, 'indicators/ppo.src.js', [_modules['parts/Globals.js'], _modules['parts/Utilities.js'], _modules['mixins/indicator-required.js']], function (H, U, requiredIndicatorMixin) {
         /* *
          *
          *  License: www.highcharts.com/license
@@ -93,7 +93,8 @@
          *  !!!!!!! SOURCE GETS TRANSPILED BY TYPESCRIPT. EDIT TS FILE ONLY. !!!!!!!
          *
          * */
-        var EMA = H.seriesTypes.ema, error = H.error, correctFloat = H.correctFloat, requiredIndicator = requiredIndicatorMixin;
+        var correctFloat = U.correctFloat;
+        var EMA = H.seriesTypes.ema, error = H.error, requiredIndicator = requiredIndicatorMixin;
         /**
          * The PPO series type.
          *
@@ -165,7 +166,7 @@
                 if (periods.length !== 2 || periods[1] <= periods[0]) {
                     error('Error: "PPO requires two periods. Notice, first period ' +
                         'should be lower than the second one."');
-                    return false;
+                    return;
                 }
                 SPE = EMA.prototype.getValues.call(this, series, {
                     index: index,
@@ -177,7 +178,7 @@
                 });
                 // Check if ema is calculated properly, if not skip
                 if (!SPE || !LPE) {
-                    return false;
+                    return;
                 }
                 periodsOffset = periods[1] - periods[0];
                 for (i = 0; i < LPE.yData.length; i++) {
