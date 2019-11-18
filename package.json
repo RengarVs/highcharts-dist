@@ -18,7 +18,6 @@
     "browserify",
     "webpack"
   ],
-  "bugs": "https://github.com/RengarVs/highcharts/issues",
   "license": "https://www.highcharts.com/license",
   "types": "highcharts.d.ts"
 }
